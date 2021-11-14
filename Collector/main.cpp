@@ -63,8 +63,39 @@ int main(int argc, char *argv[])
       if (cartes_Processeur.find(twt.source) == cartes_Processeur.end())
       {
         //source not found
+
+        //We create a processor and add tweet in a cascade
         Processor p;
+        p.add_tweet_in_cascade(key, time1_obs, time2_obs, min_cascade_size, terminated, twt);
+
         cartes_Processeur.insert(std::pair<tweetoscope::source::idf, Processor>(twt.source, p));
+      }
+      else
+      {
+        //source was found
+
+        //Add tweet in a cascade
+        cartes_Processeur[twt.source].add_tweet_in_cascade(key, time1_obs, time2_obs, min_cascade_size, terminated, twt);
+      }
+
+      std::vector<Cascade> Cascades_partielles;
+      std::vector<Cascade> Cascades_finies;
+
+      map<string, int>::iterator it;
+
+      for (it = symbolTable.begin(); it != symbolTable.end(); it++)
+      {
+        std::cout << it->first // string (key)
+                  << ':'
+                  << it->second // string's value
+                  << std::endl;
+      }
+
+      for (auto &it : cartes_Processeur.begin(); it != cartes_Processeur.end(); it++)
+      {
+        Cascades_partielles(push_back((it->second).cascade_partielles(time1_obs)));
+        Cascades_partielles(push_back((it->second).cascade_partielles(time2_obs)));
+        Cascades_finies.push_back((it->second).cascades_termine(terminated, min_cascade_size));
       }
 
       std::ostringstream ostr1;
