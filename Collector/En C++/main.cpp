@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ostream>
 #include <cppkafka/cppkafka.h>
-#include <Processor.hpp>
+#include "Processor.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
   auto in = params.topic.in;
   auto out_series = params.topic.out_series;
   auto out_properties = params.topic.out_properties;
-  auto time1_obs = params.times.observation;
-  auto time2_obs = params.times.observation2;
+  auto time1_obs = params.times.observation[0];
+  auto time2_obs = params.times.observation[1];
   auto terminated = params.times.terminated;
   auto min_cascade_size = params.cascade.min_cascade_size;
 
@@ -81,27 +81,18 @@ int main(int argc, char *argv[])
       std::vector<Cascade> Cascades_partielles;
       std::vector<Cascade> Cascades_finies;
 
-      map<string, int>::iterator it;
-
-      for (it = symbolTable.begin(); it != symbolTable.end(); it++)
+      std::map<tweetoscope::source::idf, Processor>::iterator it;
+      for (it = cartes_Processeur.begin(); it != cartes_Processeur.end(); it++)
       {
-        std::cout << it->first // string (key)
-                  << ':'
-                  << it->second // string's value
-                  << std::endl;
-      }
-
-      for (auto &it : cartes_Processeur.begin(); it != cartes_Processeur.end(); it++)
-      {
-        Cascades_partielles(push_back((it->second).cascade_partielles(time1_obs)));
-        Cascades_partielles(push_back((it->second).cascade_partielles(time2_obs)));
+        Cascades_partielles.push_back((it->second).cascade_partielles(time1_obs));
+        Cascades_partielles.push_back((it->second).cascade_partielles(time2_obs));
         Cascades_finies.push_back((it->second).cascades_termine(terminated, min_cascade_size));
       }
 
       std::ostringstream ostr1;
       std::ostringstream ostr2;
 
-      std::string message1{twt.str()};
+      /*std::string message1{twt.str()};
       std::string message2{twt.str()};
 
       builder1.key(key);
@@ -141,7 +132,7 @@ int main(int argc, char *argv[])
         {
           std::cout << "something went wrong: " << e.what() << std::endl;
         }
-      }
+      }*/
       std::chrono::milliseconds timespan(1000);
       std::this_thread::sleep_for(timespan);
     }
