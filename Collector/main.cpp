@@ -81,16 +81,6 @@ int main(int argc, char *argv[])
       std::vector<Cascade> Cascades_partielles;
       std::vector<Cascade> Cascades_finies;
 
-      map<string, int>::iterator it;
-
-      for (it = symbolTable.begin(); it != symbolTable.end(); it++)
-      {
-        std::cout << it->first // string (key)
-                  << ':'
-                  << it->second // string's value
-                  << std::endl;
-      }
-
       for (auto &it : cartes_Processeur.begin(); it != cartes_Processeur.end(); it++)
       {
         Cascades_partielles(push_back((it->second).cascade_partielles(time1_obs)));
