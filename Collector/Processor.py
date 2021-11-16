@@ -16,7 +16,7 @@ class Processor :
     def add_tweet(self, key, tweet):
         type = tweet.type
         if type == "tweet" : 
-            cascade = Cascade(tweet.type, key, tweet.msg, T_obs1, [(tweet.time, tweet.magnitude)])
+            cascade = Cascade(tweet.type, key, tweet.msg, [(tweet.time, tweet.magnitude)])
             self.collection[key] = cascade
         else :
             if key in self.collection :

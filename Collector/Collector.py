@@ -4,14 +4,14 @@ import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer
-from tweetoscope.Collector.Processor import Processor
+from Processor import Processor
 import _thread
 import time
 from Tweet import Tweet
 from Cascade import Cascade
 
 #Parametres
-brokers="localhost:9092"
+brokers="localhost:2181"
 
 #[topic]
 # The topic on which to listen for the tweets
