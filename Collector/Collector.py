@@ -60,22 +60,22 @@ def Consumer(params, temps):
   for msg in params:                            # Blocking call waiting for a new message
     
       Key = msg.key
-      type = msg.value.type
-      source = msg.value.source
-      msge = msg.value.msg
-      t = msg.value.t
-      m = msg.value.m
-      info = msg.value.info
+      type = msg.value['type']
+      source = msg.value['tweet_id']
+      msge = msg.value['msg']
+      t = msg.value['t']
+      m = msg.value['m']
+      info = msg.value['info']
 
       source_exist = (source in cartes_processeurs)
 
       if type=="tweet" and not source_exist:      
         cartes_processeurs[source] = Processor()
-        tweet = Tweet(type, msg, t, m, source, info)
+        tweet = Tweet(type, msge, t, m, source, info)
         (cartes_processeurs[source]).add_tweet(Key, tweet)
       
       elif source_exist : #tweet or retweet
-        tweet = Tweet(type, msg, t, m, source, info)
+        tweet = Tweet(type, msge, t, m, source, info)
         (cartes_processeurs[source]).add_tweet(Key, tweet)   
   time.sleep(temps)
 
