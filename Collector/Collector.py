@@ -55,70 +55,63 @@ consumer = KafkaConsumer(topic_in,                   # Topic name
 #Creation d'une carte de processeurs
 cartes_processeurs = {}
 
-def Consumer(params, temps):
-
-  for msg in params:                            # Blocking call waiting for a new message
+for msg in consumer:                            # Blocking call waiting for a new message  
     
-      Key = msg.key
-      type = msg.value['type']
-      source = msg.value['tweet_id']
-      msge = msg.value['msg']
-      t = msg.value['t']
-      m = msg.value['m']
-      info = msg.value['info']
+    #On récupère les infos contenus dans un tweet/retweet
+    Key = msg.key
+    type = msg.value['type']
+    source = msg.value['tweet_id']
+    msge = msg.value['msg']
+    t = msg.value['t']
+    m = msg.value['m']
+    info = msg.value['info']
 
-      source_exist = (source in cartes_processeurs)
+    #On vérifie si la source existe déjà dans notre carte de processeurs
+    source_exist = (source in cartes_processeurs)
 
-      if type=="tweet" and not source_exist:      
-        cartes_processeurs[source] = Processor()
-        tweet = Tweet(type, msge, t, m, source, info)
-        (cartes_processeurs[source]).add_tweet(Key, tweet)
-      
-      elif source_exist : #tweet or retweet
-        tweet = Tweet(type, msge, t, m, source, info)
-        (cartes_processeurs[source]).add_tweet(Key, tweet)   
-  time.sleep(temps)
+    #On vérifie si c'est un nouveau tweet et que la source n'existe pas alors on crée un processeur
+    if type=="tweet" and not source_exist:      
+      cartes_processeurs[source] = Processor()
+      tweet = Tweet(type, msge, t, m, source, info)
+      (cartes_processeurs[source]).add_tweet(Key, tweet)
+    
+    #Dans ce cas il s'agira d'un retweet
+    elif source_exist : #tweet or retweet
+      tweet = Tweet(type, msge, t, m, source, info)
+      (cartes_processeurs[source]).add_tweet(Key, tweet)   
 
-def Producer(params, temps) :
+    #On parcours notre carte de processeurs pour voir s'il y a de nouvelles cascades à envoyer
+    for K, V in cartes_processeurs:
 
-  for K, V in cartes_processeurs:
-    cascades_series1 = V.get_cascades_series(T_obs1, min_cascade_size)
-    if len(cascades_series1) != 0:
-        for c in cascades_series1 :
-              for Cle, Valeur in c:
-                  params.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
+      #Pour le temps d'observation T_obs1    
+      cascades_series1 = V.get_cascades_series(T_obs1, min_cascade_size)
+      if len(cascades_series1) != 0:
+          for c in cascades_series1 :
+                for Cle, Valeur in c:
+                    producer.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
 
-    cascades_series2 = V.get_cascades_series(T_obs2, min_cascade_size)
-    if len(cascades_series2) != 0:
-        for c in cascades_series1 :
-              for Cle, Valeur in c:
-                  params.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
-  
+      #Pour le temps d'observation T_obs2
+      cascades_series2 = V.get_cascades_series(T_obs2, min_cascade_size)
+      if len(cascades_series2) != 0:
+          for c in cascades_series1 :
+                for Cle, Valeur in c:
+                    producer.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
 
-    cascades_properties1 = V.get_cascades_properties(T_obs1, terminated, min_cascade_size)
-    if len(cascades_properties1) != 0:
-        for c in cascades_properties1 :
-              for Cle, Valeur in c:
-                  params.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
+      #On récupère les cascades finies pour T_obs1
+      cascades_properties1 = V.get_cascades_properties(T_obs1, terminated, min_cascade_size)
+      if len(cascades_properties1) != 0:
+          for c in cascades_properties1 :
+                for Cle, Valeur in c:
+                    producer.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
 
-    cascades_properties2 = V.get_cascades_properties(T_obs2, terminated, min_cascade_size)
-    if len(cascades_properties2) != 0:
-        for c in cascades_properties2 :
-              for Cle, Valeur in c:
-                  params.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
+      #On récupère les cascades finies pour T_obs2
+      cascades_properties2 = V.get_cascades_properties(T_obs2, terminated, min_cascade_size)
+      if len(cascades_properties2) != 0:
+          for c in cascades_properties2 :
+                for Cle, Valeur in c:
+                    producer.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
+    
+producer.flush() # Flush: force purging intermediate buffers before leaving
 
-  
-  time.sleep(temps)    
-  params.flush() # Flush: force purging intermediate buffers before leaving
-
-# Create two threads as follows
-try:
-   _thread.start_new_thread(Consumer, (consumer,1, ) )
-   _thread.start_new_thread(Producer, (producer,2, ) )
-except:
-   print ("Error: unable to start thread")
-
-while 1:
-    pass
 
 
