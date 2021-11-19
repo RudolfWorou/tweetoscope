@@ -20,7 +20,7 @@ class Processor :
             self.collection[key] = cascade
         else :
             if key in self.collection :
-                self.collection[key].tweets.append([(tweet.time, tweet.magnitude)])
+                self.collection[key].tweets.append((tweet.time, tweet.magnitude))
     
     def get_cascades_series(self, T_obs, min_cascade_size):
         resultat = []
@@ -62,3 +62,7 @@ class Processor :
                 del self.collection[K]
 
         return resultat
+
+V = Cascade("L","K","Z",[(12,34),(34,6), (94,23)])
+Dt = V.tweets[len(V.tweets)-1][0] - V.tweets[0][0]
+print(Dt)
