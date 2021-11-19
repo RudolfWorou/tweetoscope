@@ -14,8 +14,8 @@ class Processor :
         return self.collection
     
     def add_tweet(self, key, tweet):
-        type = tweet.type
-        if type == "tweet" : 
+        type_ = tweet.type
+        if type_ == "tweet" : 
             cascade = Cascade(tweet.type, key, tweet.msg, [(tweet.time, tweet.magnitude)])
             self.collection[key] = cascade
         else :
@@ -41,12 +41,14 @@ class Processor :
                 resultat.append(r)        
         return resultat
     
-    def get_cascade_properties(self, T_obs, termined, min_cascade_size):
+    def get_cascade_properties(self,tActuel, T_obs, termined, min_cascade_size):
 
         resultat = []
+        A_supprimer = []
+        
 
         for K, V in self.collection.items() :
-            Dt = V.tweets[len(V.tweets)-1][0] - termined
+            Dt = tActuel - V.tweets[len(V.tweets)-1][0] 
             if min_cascade_size <= len(V.tweets) and Dt >= termined:
                 Key = T_obs
                 Value = {}
@@ -58,8 +60,10 @@ class Processor :
                 r = {}
                 r[Key] = Value
                 resultat.append(r)
-                
-                del self.collection[K]
+                A_supprimer.append(K)
+        
+        for j in A_supprimer:
+            del self.collection[j]
 
         return resultat
 

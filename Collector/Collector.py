@@ -58,8 +58,9 @@ cartes_processeurs = {}
 for msg in consumer:                            # Blocking call waiting for a new message  
     
     #On récupère les infos contenus dans un tweet/retweet
-    Key = msg.key
-    type = msg.value['type']
+    #print(msg.key,msg.value['type'] ,  msg.value['tweet_id'])
+    Key = msg.value['tweet_id']
+    type_ = msg.value['type']
     source = msg.value['tweet_id']
     msge = msg.value['msg']
     t = msg.value['t']
@@ -70,46 +71,51 @@ for msg in consumer:                            # Blocking call waiting for a ne
     source_exist = (source in cartes_processeurs)
 
     #On vérifie si c'est un nouveau tweet et que la source n'existe pas alors on crée un processeur
-    if type=="tweet" and not source_exist:      
+    if type_=="tweet" and not source_exist:      
       cartes_processeurs[source] = Processor()
-      tweet = Tweet(type, msge, t, m, source, info)
+      tweet = Tweet(type_, msge, t, m, source, info)
       (cartes_processeurs[source]).add_tweet(Key, tweet)
     
     #Dans ce cas il s'agira d'un retweet
     elif source_exist : #tweet or retweet
-      tweet = Tweet(type, msge, t, m, source, info)
+      tweet = Tweet(type_, msge, t, m, source, info)
       (cartes_processeurs[source]).add_tweet(Key, tweet)   
 
     #On parcours notre carte de processeurs pour voir s'il y a de nouvelles cascades à envoyer
-    for K, V in cartes_processeurs:
+    for K, V in cartes_processeurs.items():
 
       #Pour le temps d'observation T_obs1    
-      cascades_series1 = V.get_cascades_series(T_obs1, min_cascade_size)
-      if len(cascades_series1) != 0:
-          for c in cascades_series1 :
-                for Cle, Valeur in c:
-                    producer.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
+        cascades_series1 = V.get_cascades_series(T_obs1, min_cascade_size)
+        if len(cascades_series1) != 0:
+            for c in cascades_series1 :
+                
+                Cle = list(c.keys())[0]
+                Valeur = c[Cle]
+                producer.send('cascade_series', key = str(Cle), value = Valeur) # Send a new message to topic
 
       #Pour le temps d'observation T_obs2
-      cascades_series2 = V.get_cascades_series(T_obs2, min_cascade_size)
-      if len(cascades_series2) != 0:
-          for c in cascades_series1 :
-                for Cle, Valeur in c:
-                    producer.send('cascades_series', key = Cle, value = Valeur) # Send a new message to topic
+        cascades_series2 = V.get_cascades_series(T_obs2, min_cascade_size)
+        if len(cascades_series2) != 0:
+            for c in cascades_series1 :
+                Cle = list(c.keys())[0]
+                Valeur = c[Cle]
+                producer.send('cascade_series', key = str(Cle), value = Valeur) # Send a new message to topic
 
       #On récupère les cascades finies pour T_obs1
-      cascades_properties1 = V.get_cascades_properties(T_obs1, terminated, min_cascade_size)
-      if len(cascades_properties1) != 0:
+        cascades_properties1 = V.get_cascade_properties(t,T_obs1, terminated, min_cascade_size)
+        if len(cascades_properties1) != 0:
           for c in cascades_properties1 :
-                for Cle, Valeur in c:
-                    producer.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
+                Cle = list(c.keys())[0]
+                Valeur = c[Cle]
+                producer.send('cascade_properties', key = str(Cle), value = Valeur ) # Send a new message to topic
 
       #On récupère les cascades finies pour T_obs2
-      cascades_properties2 = V.get_cascades_properties(T_obs2, terminated, min_cascade_size)
-      if len(cascades_properties2) != 0:
-          for c in cascades_properties2 :
-                for Cle, Valeur in c:
-                    producer.send('cascades_properties', key = Cle, value = Valeur) # Send a new message to topic
+        cascades_properties2 = V.get_cascade_properties(t,T_obs2, terminated, min_cascade_size)
+        if len(cascades_properties2) != 0:
+            for c in cascades_properties2 :  
+                Cle = list(c.keys())[0]
+                Valeur = c[Cle]
+                producer.send('cascade_properties', key = str(Cle), value = Valeur) # Send a new message to topic
     
 producer.flush() # Flush: force purging intermediate buffers before leaving
 
