@@ -1,3 +1,6 @@
+'''
+Nous définissons dans ce fichier un modèle classique de la classe Cascade.
+'''
 class Cascade :
     def __init__(self, type , cid , msg , tweets):
 

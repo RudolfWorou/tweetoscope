@@ -1,3 +1,6 @@
+'''
+Dans ce fichier nous définissons le modèle de la classe Tweet
+'''
 class Tweet :
     def __init__(self, type = "", msg = "", time = 0, magnitude = 0, source = "", info = ""):
 
