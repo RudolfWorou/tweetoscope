@@ -5,7 +5,7 @@ import numpy as np
 ##External libraries
 import logger as Logger
 from sklearn.ensemble import RandomForestRegressor
-import pickle5 as pickle
+import pickle
 ## functions
 
 ## main
