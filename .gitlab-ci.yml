@@ -81,7 +81,7 @@ learner_image_job :
     script:
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_learner -t python_with_learner .
+        - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
         - docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
         changes:
@@ -95,7 +95,7 @@ monitor_image_job :
     script:
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_monitor -t python_with_monitor .
+        - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
         - docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
         changes:
