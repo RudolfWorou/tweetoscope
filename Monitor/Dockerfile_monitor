@@ -1,0 +1,10 @@
+FROM python:3.8-slim-buster
+WORKDIR /Monitor
+ADD monitor.py /Monitor
+ADD logger.py /Monitor
+
+# install libraries
+RUN pip3 install kafka-python
+RUN pip3 install termcolor
+
+CMD python3 monitor.py --broker-list localhost:9092

@@ -50,7 +50,6 @@ class Processor :
         for K, V in self.collection.items() :
             Dt = tActuel - V.tweets[len(V.tweets)-1][0] 
             if min_cascade_size <= len(V.tweets) and Dt >= termined:
-                Key = T_obs
                 Value = {}
                 Value['type'] = 'size'
                 Value['cid'] = V.cid
@@ -58,7 +57,8 @@ class Processor :
                 Value['t_end'] = V.tweets[len(V.tweets)-1][0]
 
                 r = {}
-                r[Key] = Value
+                for Key in T_obs : 
+                    r[Key] = Value
                 resultat.append(r)
                 A_supprimer.append(K)
         
