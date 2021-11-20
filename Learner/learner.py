@@ -65,10 +65,11 @@ def main():
         X.append( msg.value['X'])
         y.append(msg.value['W'])
 
-        model = RandomForestRegressor()
+        
         logger.info(f"Fit the random forest model")
         n=len(X)
         if (n ==1) or (n< 100 and n %10==0) or (n%100==0):
+            model = RandomForestRegressor() ## random forest model
             model.fit(X,y)
 
         logger.info(f"Ready to send a message to models topic")
