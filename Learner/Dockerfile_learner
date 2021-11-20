@@ -1,8 +1,7 @@
 FROM python:3.8-slim-buster
-WORKDIR /Estimator
-ADD hawkes_estimator.py /Estimator
-ADD labwork_functions.py /Estimator
-ADD logger.py   /Estimator
+WORKDIR /Learner
+ADD learner.py /Learner
+ADD logger.py   /Learner
 
 # install libraries
 RUN pip3 install numpy
