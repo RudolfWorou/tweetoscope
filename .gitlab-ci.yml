@@ -60,17 +60,7 @@ estimator_image_job :
     only:
         changes:
             - Estimator/**/*
-services: 
-    - docker:dind
-predictor_image_job :
-    stage: create_docker_images
-    image: docker:latest
-    script:
-        - cd Predictor
-        - docker build -f Dockerfile_predictor -t python_with_predictor .
-    only:
-        changes:
-            - Predictor/**/*
+
 services: 
     - docker:dind
 learner_image_job :
