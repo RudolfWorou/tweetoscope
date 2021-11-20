@@ -9,7 +9,10 @@ kafka_image_job :
     image: docker:latest
     script:
         - cd Kafka
-        - docker build -f Dockerfile_start_kafka -t ubuntu_with_kafka .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
+       
     only:
         changes:
             - Kafka/**/*
@@ -20,7 +23,9 @@ Generator_image_job :
     image: docker:latest
     script:
         - cd Generator
-        - docker build -f Dockerfile_generator -t ubuntu_with_generator .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     only:
         changes:
             - Generator/**/*
@@ -32,7 +37,9 @@ logger_image_job :
     image: docker:latest
     script:
         - cd Logger
-        - docker build -f Dockerfile_logger -t python_with_logger .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
+        - docker push $CI_REGISTRY_IMAGE/python_with_logger
     only:
         changes:
             - Logger/**/*
@@ -44,7 +51,9 @@ collector_image_job :
     image: docker:latest
     script:
         - cd Collector
-        - docker build -f Dockerfile_collector -t python_with_collector .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
+        - docker push $CI_REGISTRY_IMAGE/python_with_collector
     only:
         changes:
             - Collector/**/*
@@ -56,7 +65,10 @@ estimator_image_job :
     image: docker:latest
     script:
         - cd Estimator
-        - docker build -f Dockerfile_estimator -t python_with_estimator .
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
+        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
+
     only:
         changes:
             - Estimator/**/*
@@ -68,7 +80,9 @@ learner_image_job :
     image: docker:latest
     script:
         - cd Learner
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t python_with_learner .
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
         changes:
             - Learner/**/*
@@ -80,7 +94,9 @@ monitor_image_job :
     image: docker:latest
     script:
         - cd Monitor
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t python_with_monitor .
+        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
         changes:
             - Monitor/**/*
