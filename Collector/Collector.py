@@ -101,16 +101,16 @@ def main():
                     logger.info("A new cascade has been send to topic cascade_series")
 
 
-              cascades_properties = V.get_cascade_properties(t,i, terminated, min_cascade_size)
-              if len(cascades_properties) != 0:
-                for c in cascades_properties :
-                    Cle = list(c.keys())[0]
-                    Valeur = c[Cle]
-                    producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
-                    
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("A new cascade has been send to topic cascade_properties")
+            cascades_properties = V.get_cascade_properties(t,T_obs, terminated, min_cascade_size)
+            if len(cascades_properties) != 0:
+              for c in cascades_properties :
+                  Cle = list(c.keys())[0]
+                  Valeur = c[Cle]
+                  producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
+                  
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("A new cascade has been send to topic cascade_properties")
 
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
