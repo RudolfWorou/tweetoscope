@@ -67,7 +67,7 @@ learner_image_job :
     stage: create_docker_images
     image: docker:latest
     script:
-        - cd Collector
+        - cd Learner
         - docker build -f Dockerfile_learner -t python_with_learner .
     only:
         changes:
