@@ -2,10 +2,7 @@
 La classe processeur sert à gérer dans une collection (map) dont la clé correspond à l'identifiant
 du tweet et la valeur le tweet d'une personne X et tous ses retweets.
 '''
-from typing import Collection
-from Tweet import Tweet
 from Cascade import Cascade
-
 class Processor :
 
     def __init__(self) :
