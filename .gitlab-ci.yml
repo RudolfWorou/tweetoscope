@@ -1,0 +1,85 @@
+stages:
+    - create_docker_images
+    - build_deployments
+
+services: 
+    - docker:dind
+kafka_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Kafka
+        - docker build -f Dockerfile_start_kafka -t ubuntu_with_kafka .
+    only:
+        changes:
+            - Kafka/**/*
+services: 
+    - docker:dind
+Generator_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Generator
+        - docker build -f Dockerfile_generator -t ubuntu_with_generator .
+    only:
+        changes:
+            - Generator/**/*
+
+services: 
+    - docker:dind
+logger_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Logger
+        - docker build -f Dockerfile_logger -t python_with_logger .
+    only:
+        changes:
+            - Logger/**/*
+
+services: 
+    - docker:dind
+collector_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Collector
+        - docker build -f Dockerfile_collector -t python_with_collector .
+    only:
+        changes:
+            - Collector/**/*
+
+services: 
+    - docker:dind
+estimator_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Estimator
+        - docker build -f Dockerfile_estimator -t python_with_estimator .
+    only:
+        changes:
+            - Estimator/**/*
+services: 
+    - docker:dind
+predictor_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Predictor
+        - docker build -f Dockerfile_predictor -t python_with_predictor .
+    only:
+        changes:
+            - Predictor/**/*
+
+services: 
+    - docker:dind
+monitor_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Monitor
+        - docker build -f Dockerfile_monitor -t python_with_monitor .
+    only:
+        changes:
+            - Monitor/**/*
