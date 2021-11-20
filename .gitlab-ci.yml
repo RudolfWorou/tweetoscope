@@ -71,7 +71,18 @@ predictor_image_job :
     only:
         changes:
             - Predictor/**/*
-
+services: 
+    - docker:dind
+learner_image_job :
+    stage: create_docker_images
+    image: docker:latest
+    script:
+        - cd Collector
+        - docker build -f Dockerfile_learner -t python_with_learner .
+    only:
+        changes:
+            - Learner/**/*
+            
 services: 
     - docker:dind
 monitor_image_job :
