@@ -29,7 +29,7 @@ Generator_build :
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker run --rm --network="host" -it $CI_REGISTRY_IMAGE/ubuntu_with_generator
+        #- docker run --rm --network="host" -it $CI_REGISTRY_IMAGE/ubuntu_with_generator
         #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     retry : 2
     only:
