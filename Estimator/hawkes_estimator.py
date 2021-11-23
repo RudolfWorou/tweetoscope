@@ -88,7 +88,8 @@ def main():
         ## Loglikelihood , parameters and the predicted number of futur retweets
 
         LL,params = compute_MAP(history, T_obs, alpha, mu)
-        n_supp = round(prediction(params, history, alpha, mu, T_obs) - n_obs)
+        Ntot, G1, n_star = prediction(params, history, alpha, mu, T_obs)
+        n_supp = round(Ntot - n_obs)
 
         logger.info(f"Ready to send a message to the cascade_properties topic")
         
@@ -98,6 +99,8 @@ def main():
         'msg': message,
         'n_obs': n_obs,
         'n_supp':n_supp,
+        'G1' : G1,
+        'n_star' : n_star,
         'params': list(params)}  # arrays are not JSON serializable
 
         # Send the message to the cascade_properties topic
