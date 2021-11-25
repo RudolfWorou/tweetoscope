@@ -1,6 +1,6 @@
 ## Internal libraries
 import argparse, json
-from kafka import KafkaProducer, KafkaConsumer
+from kafka import KafkaProducer, KafkaConsumer,TopicPartition
 import numpy as np
 ##External libraries
 import logger as Logger
@@ -30,7 +30,9 @@ def main():
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
+    parser.add_argument('--observation-window', type=str, required=True, help="Observation window which can take the values : 300/600/1200")
     args = parser.parse_args()  # Parse arguments
+   
     
     ## Consumer of cascade_series
     
@@ -68,14 +70,15 @@ def main():
 
         logger.info("-------------------------------------------------------------")
         logger.info("-------------------------------------------------------------")
-
-
+        T_obs = msg.key
         
+        if T_obs!=args.observation_window:
+            continue
 
         ### checking that we have a parameters for the type
         if(msg.value['type']=='parameters'):
             
-            T_obs = msg.key
+            #T_obs = msg.key
             cid = msg.value['cid']
             p,beta = tuple(msg.value['params'])
             n_supp = msg.value['n_supp']
