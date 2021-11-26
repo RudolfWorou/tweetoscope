@@ -70,4 +70,3 @@ class Processor :
     @property
     def get_collection(self):
         return self.collection
-    

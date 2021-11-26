@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import argparse                   # To parse command line arguments
 import json                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer

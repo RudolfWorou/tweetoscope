@@ -1,88 +1,97 @@
 stages:
-    - create_docker_images
-    - build_deployments
+    - build
+    #- test
+    #- quality
+    #- package
 
 services: 
     - docker:dind
-kafka_image_job :
-    stage: create_docker_images
+kafka_build :
+    stage: build
     image: docker:latest
     script:
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
+        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
        
     only:
-        changes:
-            - Kafka/**/*
+        refs:
+            - master
+        #changes:
+        #    - Kafka/**/*
 services: 
     - docker:dind
-Generator_image_job :
-    stage: create_docker_images
+Generator_build :
+    stage: build
     image: docker:latest
     script:
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
+        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     only:
-        changes:
-            - Generator/**/*
+        refs:
+            - master
+    when: on_success # s'exécutera uniquement si le job kafka_build
 
 services: 
     - docker:dind
-logger_image_job :
-    stage: create_docker_images
+logger_build :
+    stage: build
     image: docker:latest
+    allow_failure:true
     script:
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
         - docker push $CI_REGISTRY_IMAGE/python_with_logger
     only:
-        changes:
-            - Logger/**/*
-
+        refs :
+            - master
+        
 services: 
     - docker:dind
-collector_image_job :
-    stage: create_docker_images
+collector_build :
+    stage: build
     image: docker:latest
     script:
         - cd Collector
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
-        - docker push $CI_REGISTRY_IMAGE/python_with_collector
+    #   - docker push $CI_REGISTRY_IMAGE/python_with_collector
     only:
-        changes:
-            - Collector/**/*
+        refs :
+            - master
+    when: on_success 
 
-services: 
+    services: 
     - docker:dind
-estimator_image_job :
-    stage: create_docker_images
+estimator_build :
+    stage: build
     image: docker:latest
     script:
         - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
-        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
+        #- docker push $CI_REGISTRY_IMAGE/python_with_estimator
 
     only:
-        changes:
-            - Estimator/**/*
+        refs :
+            - master
+    when : on_success
 
 services: 
     - docker:dind
 learner_image_job :
-    stage: create_docker_images
+    stage: build
     image: docker:latest
+    allow_failure : true
     script:
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
-        - docker push $CI_REGISTRY_IMAGE/python_with_learner
+        #- docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
         changes:
             - Learner/**/*
@@ -90,8 +99,9 @@ learner_image_job :
 services: 
     - docker:dind
 monitor_image_job :
-    stage: create_docker_images
+    stage: build
     image: docker:latest
+    allow_failure : true
     script:
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
