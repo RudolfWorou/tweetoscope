@@ -6,6 +6,11 @@ from kafka import KafkaConsumer   # Import Kafka consumer
 
 import logger as Logger
 
+def get_cids(L): ## l is a list of tuples (cid, T_obs, message,n_tot)
+    G={}
+    for i, element in enumerate(L):
+        G [element[0]]=i
+    return G
 
 def main():
 
@@ -25,9 +30,11 @@ def main():
     consumer = KafkaConsumer(topic_in,                   # Topic name
       bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
       value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+      auto_offset_reset="earliest",
       key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
     )
     hottest_cascades = []
+    
     print(f"Here are the {args.K}-hottest tweets")
     
     for msg in consumer:                            # Blocking call waiting for a new message  
@@ -38,13 +45,25 @@ def main():
         T_obs = msg.value['T_obs']
         message = msg.value['msg']
         n_tot = msg.value['n_tot']
-        if len(hottest_cascades)< int(args.K):
-            hottest_cascades.append((cid,T_obs,message,n_tot))
-            
+
+        current_cids=get_cids(hottest_cascades)
+
+        if cid not in current_cids:
+
+            if len(hottest_cascades)< int(args.K):
+                hottest_cascades.append((cid,T_obs,message,n_tot))
+                
+            else:
+                hottest_cascades.append((cid,T_obs,message,n_tot))
+                hottest_cascades.sort(key=lambda x:x[3],reverse=True)
+                hottest_cascades.pop()
         else:
-            hottest_cascades.append((cid,T_obs,message,n_tot))
-            hottest_cascades.sort(key=lambda x:x[3])
-            hottest_cascades.pop()
+            
+            hottest_cascades[current_cids[cid]]= (cid,T_obs,message,n_tot)
+            hottest_cascades.sort(key=lambda x:x[3],reverse=True)
+        
+
+                
 
         goback = "\033[F" * int(args.K)
         for i in range(int(args.K)):
