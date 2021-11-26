@@ -34,15 +34,14 @@ def main():
     consumer = KafkaConsumer(input_topic,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
-    key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
+    key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any) 
     )
 
     ## Producer of cascade_properties
 
     producer = KafkaProducer(
     bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
-    value_serializer=lambda v: pickle.dumps(v), # How to serialize the value to a binary buffer
-    key_serializer=str.encode                                 # How to serialize the key
+    value_serializer=lambda v: pickle.dumps(v) # How to serialize the value to a binary buffer
     )
 
 
@@ -63,7 +62,7 @@ def main():
             break
         ### retrieving information from the a new message
         X.append( msg.value['X'])
-        y.append(msg.value['W'])
+        y.append(msg.value['w'])
 
         
         logger.info(f"Fit the random forest model")
@@ -78,7 +77,7 @@ def main():
 
         # Send the message to the cascade_properties topic
 
-        producer.send(output_topic, key = msg.key, value = output_message) 
+        producer.send(output_topic, value = output_message) 
 
         logger.info("Message successfully sent to models topic")
     

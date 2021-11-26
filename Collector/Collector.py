@@ -21,10 +21,11 @@ def main():
 
     #[times]
     # Times for producing the partial cascades (timestamp)
-    T_obs1=600
-    T_obs2=1200
+    T_obs1=300
+    T_obs2=600
+    T_obs3=1200
 
-    T_obs = [T_obs1, T_obs2]
+    T_obs = [T_obs1, T_obs2,T_obs3]
 
     # Time to consider the cascade is over (timestamp)
     terminated=1800
