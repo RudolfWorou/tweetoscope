@@ -15,7 +15,7 @@ def main():
 
     ## Logger creation 
 
-    logger = Logger.get_logger('Hawkes Estimator', broker_list='localhost:9092', debug=True)  # the source string (here 'my-node') helps to identify
+    logger = Logger.get_logger('Predictor', broker_list='localhost:9092', debug=True)  # the source string (here 'my-node') helps to identify
                                                                                  # in the logger terminal the source that emitted a log message.
     
     ## Topics
@@ -68,11 +68,12 @@ def main():
     ### Getting data from the input topic
     for msg in consumer_1:        # Blocking call waiting for a new message
 
-        logger.info("-------------------------------------------------------------")
-        logger.info("-------------------------------------------------------------")
-        T_obs = msg.key
         
-        if T_obs!=args.observation_window:
+        
+        T_obs = int(msg.key)
+        
+        #print(T_obs,msg.key, T_obs!=int(args.observation_window) )
+        if T_obs!=int(args.observation_window):
             continue
 
         ### checking that we have a parameters for the type

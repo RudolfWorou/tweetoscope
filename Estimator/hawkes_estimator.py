@@ -99,11 +99,13 @@ def main():
         'msg': message,
         'n_obs': n_obs,
         'n_supp':n_supp,
+        'G1' : G1,
+        'n_star' : n_star,
         'params': list(params)}  # arrays are not JSON serializable
 
         # Send the message to the cascade_properties topic
 
-        producer.send(output_topic, key = msg.key, value = output_message) 
+        producer.send(output_topic, key =str(T_obs), value = output_message) 
 
         logger.info("Message successfully sent to the cascade_properties topic")
     

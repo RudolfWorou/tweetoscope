@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
 import argparse                   # To parse command line arguments
-import json                       # To parse and dump JSON
+import json, sys, time                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
 
 import logger as Logger
+
 
 def main():
 
@@ -17,6 +18,7 @@ def main():
         
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
+    parser.add_argument('--K', type=str, required=True, help="the number K of hottest cascades to display")
     args = parser.parse_args()  # Parse arguments
 
     #Le consumer
@@ -25,18 +27,36 @@ def main():
       value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
       key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
     )
-
+    hottest_cascades = []
+    print(f"Here are the {args.K}-hottest tweets")
+    
     for msg in consumer:                            # Blocking call waiting for a new message  
+        
+        
         cid = msg.value['cid']
         type_ = msg.value['type']
-        msge = msg.value['msg']
         T_obs = msg.value['T_obs']
-        n_obs = msg.value['n_tot']
-                    
-        logger.info("-------------------------------------------------------------")
-        logger.info("-------------------------------------------------------------")
-        logger.info("Catch a new TWEET with the highest predicted popularitie")
-        logger.info(f"cid = {cid}, T_obs = {T_obs}, n_obs = {n_obs},  type = {type_} et msg = {msge}")
+        message = msg.value['msg']
+        n_tot = msg.value['n_tot']
+        if len(hottest_cascades)< int(args.K):
+            hottest_cascades.append((cid,T_obs,message,n_tot))
+            
+        else:
+            hottest_cascades.append((cid,T_obs,message,n_tot))
+            hottest_cascades.sort(key=lambda x:x[3])
+            hottest_cascades.pop()
+
+        goback = "\033[F" * int(args.K)
+        for i in range(int(args.K)):
+            
+            try:
+                cascade  = hottest_cascades[i]
+                sys.stdout.write(f"The estimated cascade size is {cascade[3]} for the tweet with id {cascade[0]},an observation windows of {cascade[1]} and the message {cascade[2]}  \n")
+            except:
+                sys.stdout.write(f"Waiting for {i+1}-hottest tweet \n")
+
+        sys.stdout.write(f"{goback}")
+		
 
 
 if __name__=="__main__":
