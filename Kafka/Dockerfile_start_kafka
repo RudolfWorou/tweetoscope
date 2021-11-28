@@ -16,5 +16,6 @@ ENV KAFKA_PATH=/kafka_2.13-2.4.1/
 #starting the zookeeper and the  kafka server
 ADD kafka.sh /
 RUN chmod +x kafka.sh
-
-CMD ./kafka.sh start --zooconfig $KAFKA_PATH/config/zookeeper.properties --serverconfig $KAFKA_PATH/config/server.properties
+ADD server.properties /
+ADD zookeeper.properties /
+CMD ./kafka.sh start --zooconfig zookeeper.properties --serverconfig server.properties

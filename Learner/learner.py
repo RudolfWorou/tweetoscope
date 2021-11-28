@@ -15,7 +15,7 @@ def main():
 
     ## Logger creation 
 
-    logger = Logger.get_logger('Hawkes Estimator', broker_list='localhost:9092', debug=True)  # the source string (here 'my-node') helps to identify
+    logger = Logger.get_logger('Learner', broker_list='localhost:9092', debug=True)  # the source string (here 'my-node') helps to identify
                                                                                  # in the logger terminal the source that emitted a log message.
     
     ## Topics
@@ -34,6 +34,7 @@ def main():
     consumer = KafkaConsumer(input_topic,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+    auto_offset_reset="earliest",
     key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any) 
     )
 

@@ -39,12 +39,15 @@ def main():
     consumer_1 = KafkaConsumer(input_topic_1,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+    auto_offset_reset="earliest",
     key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
+    
     )
     consumer_2 = KafkaConsumer(input_topic_2,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: pickle.loads(v),  # How to deserialize the value from a binary buffer
-    consumer_timeout_ms=10000
+    auto_offset_reset="earliest",
+    consumer_timeout_ms=5000
     )
 
 

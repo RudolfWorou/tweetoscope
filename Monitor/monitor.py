@@ -23,6 +23,7 @@ def main():
     consumer = KafkaConsumer(topic_in,                   # Topic name
       bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
       value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
+      auto_offset_reset="earliest",
       key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
     )
 
