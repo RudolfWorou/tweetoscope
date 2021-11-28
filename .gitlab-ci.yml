@@ -13,6 +13,7 @@ kafka_build :
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
+        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_kafka
         #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
        
     only:
@@ -29,6 +30,7 @@ Generator_build :
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
+        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_generator
         #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     only:
         refs:
@@ -76,6 +78,7 @@ estimator_build :
         - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
+        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_estimator
         #- docker push $CI_REGISTRY_IMAGE/python_with_estimator
 
     only:
@@ -93,6 +96,7 @@ learner_image_job :
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
+        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_learner
         #- docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
         refs :
@@ -110,6 +114,7 @@ monitor_image_job :
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
+        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_monitor
         #- docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
         refs : 
