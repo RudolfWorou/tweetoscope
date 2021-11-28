@@ -79,38 +79,42 @@ def main():
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)
         
-        elif source_exist : #tweet or retweet
+        elif source_exist and type_ =="retweet" : #tweet or retweet
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)  
 
         elif type_ == "retweet" and not source_exist:
-              logger.critical(f"The cascade with id {Key} already has been closed.") 
+              logger.critical(f"The cascade with id {Key} already has been closed.")
+              continue 
 
-        #On parcours notre carte de processeurs pour voir s'il y a de nouvelles cascades à envoyer
-        for K, V in cartes_processeurs.items():
-            for i in T_obs :    
-              cascades_series = V.get_cascades_series(i, min_cascade_size)
-              if len(cascades_series) != 0:
-                for c in cascades_series :      
-                    Cle = list(c.keys())[0]
-                    Valeur = c[Cle]
-                    producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
-                    
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("A new cascade has been send to topic cascade_series")
-
-
-            cascades_properties = V.get_cascade_properties(t,T_obs, terminated, min_cascade_size)
-            if len(cascades_properties) != 0:
-              for c in cascades_properties :
+        
+        for i in T_obs :
+          V = cartes_processeurs[source]
+          dt = V.tweets[len(V.tweets)-1][0] - V.tweets[0][0]    
+          
+          if dt >= i and dt < 2*i:
+            cascades_series = cartes_processeurs[source].get_cascades_series(i, min_cascade_size)
+            if len(cascades_series) != 0:
+              for c in cascades_series :      
                   Cle = list(c.keys())[0]
                   Valeur = c[Cle]
-                  producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
+                  producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
+                
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("A new cascade has been send to topic cascade_series")
+
+
+        cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
+        if len(cascades_properties) != 0:
+          for c in cascades_properties :
+            Cle = list(c.keys())[0]
+            Valeur = c[Cle]
+            producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
                   
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("A new cascade has been send to topic cascade_properties")
+            logger.info("-------------------------------------------------------------")
+            logger.info("-------------------------------------------------------------")
+            logger.info("A new cascade has been send to topic cascade_properties")
 
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
