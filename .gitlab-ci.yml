@@ -14,11 +14,7 @@ kafka_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
         #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
-<<<<<<< HEAD
        
-=======
-    retry : 2   
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     only:
         refs:
             - master
@@ -33,13 +29,7 @@ Generator_build :
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-<<<<<<< HEAD
         #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-=======
-        #- docker run --rm --network="host" -it $CI_REGISTRY_IMAGE/ubuntu_with_generator
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-    retry : 2
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     only:
         refs:
             - master
@@ -50,11 +40,7 @@ services:
 logger_build :
     stage: build
     image: docker:latest
-<<<<<<< HEAD
     allow_failure:true
-=======
-    allow_failure : true
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     script:
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -97,11 +83,7 @@ estimator_build :
 
 services: 
     - docker:dind
-<<<<<<< HEAD
 learner_image_job :
-=======
-learner_build :
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     stage: build
     image: docker:latest
     allow_failure : true
@@ -118,11 +100,7 @@ learner_build :
             
 services: 
     - docker:dind
-<<<<<<< HEAD
 monitor_image_job :
-=======
-monitor_build :
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     stage: build
     image: docker:latest
     allow_failure : true
