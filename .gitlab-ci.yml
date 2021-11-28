@@ -45,7 +45,8 @@ logger_build :
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
-        - docker push $CI_REGISTRY_IMAGE/python_with_logger
+        - docker run $CI_REGISTRY_IMAGE/python_with_logger
+        #- docker push $CI_REGISTRY_IMAGE/python_with_logger
     only:
         refs :
             - master
