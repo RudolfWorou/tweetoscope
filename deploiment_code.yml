@@ -17,7 +17,7 @@ spec:
       containers:
         - name: generator-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/ubuntu_with_generator
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,7 +38,7 @@ spec:
       containers:
         - name: collector-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_collector
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,7 +59,7 @@ spec:
       containers:
         - name: estimator-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_estimator
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -80,7 +80,8 @@ spec:
       containers:
         - name: predictor-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_predictor
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -101,7 +102,7 @@ spec:
       containers:
         - name: learner-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_learner
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -122,7 +123,7 @@ spec:
       containers:
         - name: dashboard-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_dashboard
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -143,33 +144,6 @@ spec:
       containers:
         - name: monitor-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_monitor
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: logger-deployment
-  namespace: cpusdi1-60-ns
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: logger
-  template:
-    metadata:
-      name: logger-pod
-      labels:
-        app: logger
-    spec:
-      containers:
-        - name: logger-container
-          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_logger
-          imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: logger-vol
-              mountPath: /tmp
-      volumes:
-        - name: logger-vol
-          hostPath:
-            path: /tmp/logger
-            type: DirectoryOrCreate
+
