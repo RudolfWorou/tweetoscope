@@ -73,6 +73,7 @@ def main():
           bb = L[vv] > L[vv-1]
           logger.info(f"{bb}")
           vv = vv+1
+          d=1
         Key = msg.value['tweet_id']
         type_ = msg.value['type']
         source = msg.value['tweet_id']
