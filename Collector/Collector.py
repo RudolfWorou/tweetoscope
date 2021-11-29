@@ -117,7 +117,7 @@ def main():
                   logger.info("-------------------------------------------------------------")
                   logger.info("-------------------------------------------------------------")
                   logger.info("A new cascade has been send to topic cascade_series")
-
+                  #
 
         cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
         if len(cascades_properties) != 0:

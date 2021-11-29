@@ -86,7 +86,7 @@ def main():
         #print(T_obs,msg.key, T_obs!=int(args.observation_window) )
         if T_obs!=int(args.observation_window):
             continue
-
+        #
         ### checking that we have a parameters for the type
         if(msg.value['type']=='parameters'):
             
