@@ -61,11 +61,18 @@ def main():
     #Creation d'une carte de processeurs
     cartes_processeurs = {}
 
+    L = []
+    L.append(0)
+    vv = 1
     for msg in consumer:                            # Blocking call waiting for a new message  
         #On récupère les infos contenus dans un tweet/retweet
         
         cle = msg.key
-        logger.info(f"source={cle}")
+        if cle == '1':    
+          L.append(msg.value['t'])
+          bb = L[vv] > L[vv-1]
+          logger.info(f"{bb}")
+          vv = vv+1
         Key = msg.value['tweet_id']
         type_ = msg.value['type']
         source = msg.value['tweet_id']
