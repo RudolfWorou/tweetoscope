@@ -1,9 +1,19 @@
+
+#################################################################################################################
+#                                               LES STAGES                                                      #
+#################################################################################################################
+
 stages:
     - build
-    - test
-    #- quality
-    #- package
+    #- test
+    - quality
+    - package
+    #- deploy
+    #- performance
 
+#################################################################################################################
+#                                                  BUILD                                                        #
+#################################################################################################################
 services : 
     - docker:dind
 kafka_build :
@@ -12,30 +22,25 @@ kafka_build :
     script:
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_kafka
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
-       
+        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .   
     only:
-        refs:
-            - master
-        #changes:
-        #    - Kafka/**/*
+        changes:
+            - Kafka/**/*
+
 services: 
     - docker:dind
 Generator_build :
     stage: build
+    when: on_success
     image: docker:latest
     script:
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_generator
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     only:
-        refs:
-            - master
-    when: on_success # s'exécutera uniquement si le job kafka_build
+        changes:
+            - Generator/**/*
+    
 
 services: 
     - docker:dind
@@ -47,11 +52,9 @@ logger_build :
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
-        - docker run $CI_REGISTRY_IMAGE/python_with_logger
-        #- docker push $CI_REGISTRY_IMAGE/python_with_logger
     only:
-        refs :
-            - master
+        changes :
+            - Logger/**/*
         
 services: 
     - docker:dind
@@ -62,14 +65,12 @@ collector_build :
         - cd Collector
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
-        - docker run $CI_REGISTRY_IMAGE/python_with_collector
-    #   - docker push $CI_REGISTRY_IMAGE/python_with_collector
     only:
-        refs :
-            - master
+        changes :
+            - Collector/**/*
     when: on_success 
 
-    services: 
+services: 
     - docker:dind
 estimator_build :
     stage: build
@@ -78,9 +79,6 @@ estimator_build :
         - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
-        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_estimator
-        #- docker push $CI_REGISTRY_IMAGE/python_with_estimator
-
     only:
         refs :
             - master
@@ -96,13 +94,9 @@ learner_image_job :
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
-        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_learner
-        #- docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
-        refs :
-            - master
-        #changes:
-        #    - Learner/**/*
+        changes:
+            - Learner/**/*
             
 services: 
     - docker:dind
@@ -114,10 +108,122 @@ monitor_image_job :
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
-        - docker run $CI_REGISTRY_IMAGE/ubuntu_with_monitor
-        #- docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
-        refs : 
+        changes:
+            - Monitor/**/*
+
+#################################################################################################################
+#                                                  TEST                                                         #
+#################################################################################################################
+
+
+
+#################################################################################################################
+#                                                  QUALITY                                                      #
+#################################################################################################################
+code_quality_job:
+  stage: quality
+  image: docker:stable
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - mkdir codequality-results
+    - docker run
+        --env CODECLIMATE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /tmp/cc:/tmp/cc
+        codeclimate/codeclimate analyze -f html > ./codequality-results/index.html
+  artifacts:
+    paths:
+      - codequality-results/
+
+#################################################################################################################
+#                                                  PACKAGE                                                      #
+#################################################################################################################
+services : 
+    - docker:dind
+kafka_build :
+    stage: package
+    image: docker:latest
+    script:
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
+       
+    only:
+        changes:
+            - Kafka/**/*
+
+services: 
+    - docker:dind
+Generator_build :
+    stage: package
+    when: on_success 
+    image: docker:latest
+    script:
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
+    only:
+        changes:
+            - Generator/**/*
+    
+
+services: 
+    - docker:dind
+logger_build :
+    stage: package
+    image: docker:latest
+    allow_failure : true
+    script:
+        - docker push $CI_REGISTRY_IMAGE/python_with_logger
+    only:
+        changes :
+            - Logger/**/*
+        
+services: 
+    - docker:dind
+collector_build :
+    stage: package
+    image: docker:latest
+    script:
+       - docker push $CI_REGISTRY_IMAGE/python_with_collector
+    only:
+        changes :
+            - Collector/**/*
+    when: on_success 
+
+services: 
+    - docker:dind
+estimator_build :
+    stage: package
+    image: docker:latest
+    script:
+        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
+
+    only:
+        refs :
             - master
-        #changes:
-        #    - Monitor/**/*
+    when : on_success
+
+services: 
+    - docker:dind
+learner_image_job :
+    stage: package
+    image: docker:latest
+    allow_failure : true
+    script:
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner
+    only:
+        changes:
+            - Learner/**/*
+            
+services: 
+    - docker:dind
+monitor_image_job :
+    stage: package
+    image: docker:latest
+    allow_failure : true
+    script:
+        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
+    only:
+        changes:
+            - Monitor/**/*
