@@ -7,7 +7,6 @@ stages:
     - quality
     #- test
     - build
-    #- package
     #- deploy
     #- performance
 
@@ -24,13 +23,12 @@ kafka_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
         - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
-    #only:
-    #    changes:
-    #        - Kafka/**/*
-    
     only:
-        refs :
-            - master
+        changes:
+            - Kafka/**/*
+    #only:
+    #    refs :
+    #        - master
 
 services: 
     - docker:dind
@@ -43,12 +41,12 @@ Generator_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
         - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-    #only:
-    #    changes:
-    #        - Generator/**/*
     only:
-        refs :
-            - master
+        changes:
+            - Generator/**/*
+    #only:
+    #    refs :
+    #        - master
 
 services: 
     - docker:dind
