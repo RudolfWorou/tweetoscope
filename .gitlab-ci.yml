@@ -23,7 +23,7 @@ kafka_build :
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        - docker push $CI_REGISTRY_IMAGE/python_with_kafka   
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
     #only:
     #    changes:
     #        - Kafka/**/*
@@ -42,7 +42,7 @@ Generator_build :
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker push $CI_REGISTRY_IMAGE/python_with_generator
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     #only:
     #    changes:
     #        - Generator/**/*
@@ -61,12 +61,9 @@ logger_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
         - docker push $CI_REGISTRY_IMAGE/python_with_logger
-    #only:
-    #    changes :
-    #        - Logger/**/*
     only:
-        refs :
-            - master    
+        changes :
+            - Logger/**/*
 services: 
     - docker:dind
 collector_build :
@@ -77,12 +74,9 @@ collector_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
         - docker push $CI_REGISTRY_IMAGE/python_with_collector
-    #only:
-    #    changes :
-    #        - Collector/**/*
     only:
-        refs :
-            - master
+        changes :
+            - Collector/**/*
     when: on_success 
 
 services: 
@@ -96,8 +90,8 @@ estimator_build :
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
         - docker push $CI_REGISTRY_IMAGE/python_with_estimator
     only:
-        refs :
-            - master
+        changes :
+            - Estimator/**/*
     when : on_success
 
 services: 
@@ -112,11 +106,8 @@ learner_image_job :
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
         - docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
-        refs :
-            - master
-    #only:
-    #    changes:
-    #        - Learner/**/*
+        changes:
+            - Learner/**/*
             
 services: 
     - docker:dind
@@ -129,12 +120,9 @@ monitor_image_job :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
         - docker push $CI_REGISTRY_IMAGE/python_with_monitor
-    #only:
-        #changes:
-        #    - Monitor/**/*
     only:
-        refs :
-            - master
+        changes:
+            - Monitor/**/*
 #################################################################################################################
 #                                                  TEST                                                         #
 #################################################################################################################
