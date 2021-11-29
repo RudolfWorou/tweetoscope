@@ -57,8 +57,8 @@ def prediction(params, history, alpha, mu, t):
    
     EM = mu * (alpha - 1) / (alpha - 2)
     n_star = p * EM
-    if n_star >= 1:
-        raise Exception(f"Branching factor {n_star:.2f} greater than one")
+    #if n_star >= 1:
+    #    raise Exception(f"Branching factor {n_star:.2f} greater than one")
     n = len(history)
 
     I = history[:,0] < t
