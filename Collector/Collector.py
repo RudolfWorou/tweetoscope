@@ -100,7 +100,7 @@ def main():
 
           le_temps_le_plus_ancien=[]
           for K, cascade in cascades.items():
-            le_temps_le_plus_ancien.append(cascade[0][0])
+            le_temps_le_plus_ancien.append(cascade.tweets[0][0])
           
           dt = t - min(le_temps_le_plus_ancien)    
           
