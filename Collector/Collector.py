@@ -91,7 +91,8 @@ def main():
         
         for i in T_obs :
           V = cartes_processeurs[source]
-          dt = V.tweets[len(V.tweets)-1][0] - V.tweets[0][0]    
+          tweetss = V.get_collection[source].tweets
+          dt = tweetss[len(tweetss)-1][0] - tweetss[0][0]    
           
           if dt >= i and dt < 2*i:
             cascades_series = cartes_processeurs[source].get_cascades_series(i, min_cascade_size)
