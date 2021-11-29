@@ -18,7 +18,7 @@ def main():
     topic_in="alerts"
     
     ## Logger creation 
-    logger = Logger.get_logger('Dashboard', broker_list='localhost:9092', debug=True)  # the source string (here 'my-node') helps to identify
+    logger = Logger.get_logger('Dashboard', broker_list='kafka-service:9092', debug=True)  # the source string (here 'my-node') helps to identify
                                                                                     # in the logger terminal the source that emitted a log message.
         
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
