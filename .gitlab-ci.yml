@@ -234,7 +234,6 @@ services:
 learner_package :
     stage: package
     image: docker:latest
-    allow_failure : true
     script:
         - docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
@@ -249,8 +248,8 @@ services:
 monitor_package :
     stage: package
     image: docker:latest
-    allow_failure : true
     script:
+        - docker tag python_with_monitor $CI_REGISTRY_IMAGE/python_with_monitor
         - docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
         refs :
