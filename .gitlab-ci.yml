@@ -103,12 +103,10 @@ predictor_build :
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
         - docker push $CI_REGISTRY_IMAGE/python_with_predictor
-    #only:
-    #    changes:
-    #        - Predictor/**/*
     only:
-        refs:
-            - master
+        changes:
+            - Predictor/**/*
+    
 services: 
     - docker:dind
 learner_build :
@@ -138,6 +136,23 @@ monitor_image_job :
     only:
         changes:
             - Monitor/**/*
+
+services: 
+    - docker:dind
+dashboard_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dashboard
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
+        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
+    only:
+        refs:
+            - master
+
+
 #################################################################################################################
 #                                                  TEST                                                         #
 #################################################################################################################
