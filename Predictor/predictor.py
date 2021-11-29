@@ -26,6 +26,10 @@ def main():
     output_topic_2 = "alerts"
     output_topic_3 = "stats"
 
+    #topics'key
+    key_dic ={"300":0, "600":1, "1200":2}
+
+
     ## Parser setting up
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
@@ -36,21 +40,25 @@ def main():
     
     ## Consumer of cascade_series
     
-    consumer_1 = KafkaConsumer(input_topic_1,                   # Topic name
+    consumer_1 = KafkaConsumer(
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
-    key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
-    
+    key_deserializer= lambda v: v.decode(),                       # How to deserialize the key (if any)
+    group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
     )
+
+    consumer_1.assign([TopicPartition(input_topic_1, key_dic[args.observation_window])])
+
+
     consumer_2 = KafkaConsumer(input_topic_2,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: pickle.loads(v),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
-    consumer_timeout_ms=5000
+    group_id = "ModelsConsumerGroup-{}".format(args.observation_window),   
+    consumer_timeout_ms=10000
     )
-
-
+                                
     ## Producer of cascade_properties
 
     producer = KafkaProducer(
@@ -90,7 +98,7 @@ def main():
 
             n_star = msg.value['n_star']
             G1= msg.value['G1']
-            logger.info("Catch a new message of type parameters where T_obs is : " + str(T_obs) + " And cid is :" +str (cid))
+            #logger.info("Catch a new message of type parameters where T_obs is : " + str(T_obs) + " And cid is :" +str (cid))
             if cid in N_TOT.keys():
                 n_tot = N_TOT[cid]
             else:
@@ -100,6 +108,7 @@ def main():
             n_tot = msg.value['n_tot']
             cid = msg.value['cid']
             N_TOT[cid] = n_tot
+            logger.info("Catch a new message of type size where T_obs is : " + str(T_obs) + " ,cid is :" +str(cid) + " and n_tot is :" +str(n_tot))
             if cid in msg_params:
                 this_msg = msg_params[cid]
                 p,beta = tuple(this_msg.value['params'])
