@@ -64,7 +64,8 @@ def main():
     for msg in consumer:                            # Blocking call waiting for a new message  
         #On récupère les infos contenus dans un tweet/retweet
         
-        logger.info(f"{msg}")
+        cle = msg.key
+        logger.info(f"source={cle}")
         Key = msg.value['tweet_id']
         type_ = msg.value['type']
         source = msg.value['tweet_id']
