@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import argparse                   # To parse command line arguments
 import json
-from Collector.Cascade import Cascade                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer
 
