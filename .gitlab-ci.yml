@@ -160,7 +160,7 @@ code_quality_job:
 #################################################################################################################
 services : 
     - docker:dind
-kafka_build :
+kafka_package :
     stage: package
     image: docker:latest
     script:
@@ -174,7 +174,7 @@ kafka_build :
             - master
 services: 
     - docker:dind
-Generator_build :
+Generator_package :
     stage: package
     when: on_success 
     image: docker:latest
@@ -189,7 +189,7 @@ Generator_build :
 
 services: 
     - docker:dind
-logger_build :
+logger_package :
     stage: package
     image: docker:latest
     allow_failure : true
@@ -203,7 +203,7 @@ logger_build :
             - master    
 services: 
     - docker:dind
-collector_build :
+collector_package :
     stage: package
     image: docker:latest
     script:
@@ -218,7 +218,7 @@ collector_build :
 
 services: 
     - docker:dind
-estimator_build :
+estimator_package :
     stage: package
     image: docker:latest
     script:
@@ -231,7 +231,7 @@ estimator_build :
 
 services: 
     - docker:dind
-learner_image_job :
+learner_package :
     stage: package
     image: docker:latest
     allow_failure : true
@@ -246,7 +246,7 @@ learner_image_job :
             
 services: 
     - docker:dind
-monitor_image_job :
+monitor_package :
     stage: package
     image: docker:latest
     allow_failure : true
