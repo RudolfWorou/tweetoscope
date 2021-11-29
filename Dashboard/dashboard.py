@@ -70,8 +70,10 @@ def main():
             
             try:
                 cascade  = hottest_cascades[i]
+                logger.info(f"The estimated cascade size is {cascade[3]} for the tweet with id {cascade[0]},an observation windows of {cascade[1]} and the message {cascade[2]}  \n")
                 sys.stdout.write(f"The estimated cascade size is {cascade[3]} for the tweet with id {cascade[0]},an observation windows of {cascade[1]} and the message {cascade[2]}  \n")
             except:
+                logger.info(f"Waiting for {i+1}-hottest tweet \n")
                 sys.stdout.write(f"Waiting for {i+1}-hottest tweet \n")
 
         sys.stdout.write(f"{goback}")

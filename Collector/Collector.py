@@ -61,6 +61,9 @@ def main():
     #Creation d'une carte de processeurs
     cartes_processeurs = {}
 
+    vv = 1
+    vvv = []
+    vvv.append(0)
     for msg in consumer:                            # Blocking call waiting for a new message  
         #On récupère les infos contenus dans un tweet/retweet
         Key = msg.value['tweet_id']
@@ -70,7 +73,11 @@ def main():
         t = msg.value['t']
         m = msg.value['m']
         info = msg.value['info']
-
+        
+        vvv.append(t)
+        sss = vvv[vv] > vvv[vv-1]
+        logger.info(f"{sss}")
+        vv = vv+1
         #On vérifie si la source existe déjà dans notre carte de processeurs
         source_exist = (source in cartes_processeurs)
 
@@ -102,9 +109,9 @@ def main():
                   Valeur = c[Cle]
                   producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
                 
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("A new cascade has been send to topic cascade_series")
+                  #logger.info("-------------------------------------------------------------")
+                  #logger.info("-------------------------------------------------------------")
+                  #logger.info("A new cascade has been send to topic cascade_series")
 
 
         cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
