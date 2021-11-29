@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse                   # To parse command line arguments
-import json                       # To parse and dump JSON
+import json
+from Collector.Cascade import Cascade                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer
 
@@ -61,22 +62,11 @@ def main():
     #Creation d'une carte de processeurs
     cartes_processeurs = {}
 
-    L = []
-    L.append(0)
-    vv = 1
-    for msg in consumer:                            # Blocking call waiting for a new message  
+    for msg in consumer:                              
         #On récupère les infos contenus dans un tweet/retweet
-        
-        cle = msg.key
-        if cle == '1':    
-          L.append(msg.value['t'])
-          bb = L[vv] > L[vv-1]
-          logger.info(f"{bb}")
-          vv = vv+1
-          d=1
         Key = msg.value['tweet_id']
         type_ = msg.value['type']
-        source = msg.value['tweet_id']
+        source = msg.key
         msge = msg.value['msg']
         t = msg.value['t']
         m = msg.value['m']
@@ -91,7 +81,11 @@ def main():
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)
         
-        elif source_exist and type_ =="retweet" : #tweet or retweet
+        elif type_=="tweet" and source_exist:      
+          tweet = Tweet(type_, msge, t, m, source, info)
+          (cartes_processeurs[source]).add_tweet(Key, tweet)
+
+        elif type_ =="retweet" and source_exist : #tweet or retweet
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)  
 
@@ -101,21 +95,27 @@ def main():
 
         
         for i in T_obs :
+          
           V = cartes_processeurs[source]
-          tweetss = V.get_collection[source].tweets
-          dt = tweetss[len(tweetss)-1][0] - tweetss[0][0]    
+          cascades = V.get_collection
+
+          le_temps_le_plus_ancien=[]
+          for K, cascade in cascades.items():
+            le_temps_le_plus_ancien.append(cascade[0][0])
+          
+          dt = t - min(le_temps_le_plus_ancien)    
           
           if dt >= i and dt < 2*i:
-            cascades_series = cartes_processeurs[source].get_cascades_series(i, min_cascade_size)
+            cascades_series = cartes_processeurs[source].get_cascades_series(t,i, min_cascade_size)
             if len(cascades_series) != 0:
               for c in cascades_series :      
                   Cle = list(c.keys())[0]
                   Valeur = c[Cle]
                   producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
                 
-                  #logger.info("-------------------------------------------------------------")
-                  #logger.info("-------------------------------------------------------------")
-                  #logger.info("A new cascade has been send to topic cascade_series")
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("-------------------------------------------------------------")
+                  logger.info("A new cascade has been send to topic cascade_series")
 
 
         cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
