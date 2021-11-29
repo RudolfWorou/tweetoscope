@@ -1,0 +1,175 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generator-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generator
+  template:
+    metadata:
+      name: generator-pod
+      labels:
+        app: generator
+    spec:
+      containers:
+        - name: generator-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/ubuntu_with_generator
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      name: collector-pod
+      labels:
+        app: collector
+    spec:
+      containers:
+        - name: collector-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_collector
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estimator-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: estimator
+  template:
+    metadata:
+      name: estimator-pod
+      labels:
+        app: estimator
+    spec:
+      containers:
+        - name: estimator-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_estimator
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: predictor-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: predictor
+  template:
+    metadata:
+      name: predictor-pod
+      labels:
+        app: predictor
+    spec:
+      containers:
+        - name: predictor-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_predictor
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learner-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learner
+  template:
+    metadata:
+      name: learner-pod
+      labels:
+        app: learner
+    spec:
+      containers:
+        - name: learner-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_learner
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      name: dashboard-pod
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_dashboard
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      name: monitor-pod
+      labels:
+        app: monitor
+    spec:
+      containers:
+        - name: monitor-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_monitor
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger-deployment
+  namespace: cpusdi1-60-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logger
+  template:
+    metadata:
+      name: logger-pod
+      labels:
+        app: logger
+    spec:
+      containers:
+        - name: logger-container
+          image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_logger
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: logger-vol
+              mountPath: /tmp
+      volumes:
+        - name: logger-vol
+          hostPath:
+            path: /tmp/logger
+            type: DirectoryOrCreate

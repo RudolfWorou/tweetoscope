@@ -94,7 +94,24 @@ estimator_build :
 
 services: 
     - docker:dind
-learner_image_job :
+predictor_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Learner
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner
+    #only:
+    #    changes:
+    #        - Predictor/**/*
+    only:
+        refs:
+            - master
+services: 
+    - docker:dind
+learner_build :
     stage: build
     image: docker:latest
     allow_failure : true
