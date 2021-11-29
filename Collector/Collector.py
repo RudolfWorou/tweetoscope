@@ -114,7 +114,7 @@ def main():
                   Cle = list(c.keys())[0]
                   Valeur = c[Cle]
                   producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
-                
+                  #dd
                   #logger.info("-------------------------------------------------------------")
                   #logger.info("-------------------------------------------------------------")
                   #logger.info("A new cascade has been send to topic cascade_series")
