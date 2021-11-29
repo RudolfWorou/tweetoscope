@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster
 WORKDIR /Estimator
 ADD hawkes_estimator.py /Estimator
 ADD labwork_functions.py /Estimator
-ADD logger.py   /Estimator
+ADD logger.py /Estimator
 
 # install libraries
 RUN pip3 install numpy
@@ -11,4 +11,4 @@ RUN pip3 install kafka-python
 RUN pip3 install scikit-learn
 RUN pip3 install termcolor
 
-CMD python3 hawkes_estimator.py --broker-list localhost:9092
+CMD python3 hawkes_estimator.py --broker-list kafka-service:9092

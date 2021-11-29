@@ -1,7 +1,7 @@
 FROM python:3.8-slim-buster
 WORKDIR /Learner
 ADD learner.py /Learner
-ADD logger.py   /Learner
+ADD logger.py /Learner
 
 # install libraries
 RUN pip3 install numpy
@@ -10,4 +10,4 @@ RUN pip3 install kafka-python
 RUN pip3 install scikit-learn
 RUN pip3 install termcolor
 
-CMD python3 learner.py --broker-list localhost:9092
+CMD python3 learner.py --broker-list kafka-service:9092

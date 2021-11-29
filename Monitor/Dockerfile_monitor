@@ -7,4 +7,4 @@ ADD logger.py /Monitor
 RUN pip3 install kafka-python
 RUN pip3 install termcolor
 
-CMD python3 monitor.py --broker-list localhost:9092
+CMD python3 monitor.py --broker-list kafka-service:9092
