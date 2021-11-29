@@ -1,10 +1,10 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 WORKDIR /Dashboard
 ADD dashboard.py /Dashboard
 ADD logger.py /Dashboard
 
 # install libraries
-RUN pip3 install kafka-python
-RUN pip3 install termcolor
+RUN pip3 install --no-cache-dir kafka-python
+RUN pip3 install --no-cache-dir termcolor
 
 CMD python3 dashboard.py --broker-list kafka-service:9092
