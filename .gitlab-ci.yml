@@ -20,11 +20,15 @@ kafka_build :
     script:
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
+        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka_minicube  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka_minicube   
     only:
         changes:
             - Kafka/**/*
+        refs:
+            - minicube
+        except:
+            - master
         
 
 services: 
@@ -36,11 +40,15 @@ Generator_build :
     script:
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
+        - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator_minicube  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator_minicube
     only:
         changes:
             - Generator/**/*
+        refs:
+            - minicube
+        except:
+            - master
         
 
 services: 
@@ -52,12 +60,15 @@ logger_build :
     script:
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
-        - docker push $CI_REGISTRY_IMAGE/python_with_logger
+        - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_logger_minicube
     only:
         changes :
             - Logger/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
 services: 
     - docker:dind
 collector_build :
@@ -66,12 +77,15 @@ collector_build :
     script:
         - cd Collector
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
-        - docker push $CI_REGISTRY_IMAGE/python_with_collector
+        - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_collector_minicube
     only:
         changes :
             - Collector/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
     when: on_success 
 
 services: 
@@ -82,12 +96,15 @@ estimator_build :
     script:
         - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
-        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
+        - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_estimator_minicube
     only:
         changes :
             - Estimator/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
     when : on_success
 
 services: 
@@ -99,12 +116,15 @@ predictor_build :
     script:
         - cd Predictor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
-        - docker push $CI_REGISTRY_IMAGE/python_with_predictor
+        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_predictor_minicube
     only:
         changes:
             - Predictor/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
     
 services: 
     - docker:dind
@@ -115,12 +135,15 @@ learner_build :
     script:
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
-        - docker push $CI_REGISTRY_IMAGE/python_with_learner
+        - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner_minicube
     only:
         changes:
             - Learner/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
             
 services: 
     - docker:dind
@@ -131,12 +154,15 @@ monitor_image_job :
     script:
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
-        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
+        - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_monitor_minicube
     only:
         changes:
             - Monitor/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
 
 services: 
     - docker:dind
@@ -147,12 +173,15 @@ dashboard_build :
     script:
         - cd Dashboard
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
-        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
+        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard_minicube .
+        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard_minicube
     only:
         changes:
             - Dashboard/**/*
-        
+        refs:
+            - minicube
+        except:
+            - master
 
 
 
