@@ -49,7 +49,7 @@ metadata:
 spec:
   containers:
     - name: kafka-container
-      image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/ubuntu_with_kafka
+      image: wurstmeister/kafka            #gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/ubuntu_with_kafka
       imagePullPolicy: IfNotPresent
       env:
         - name: KAFKA_ADVERTISED_HOST_NAME
