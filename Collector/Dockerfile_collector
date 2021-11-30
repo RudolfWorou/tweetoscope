@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 WORKDIR /Collector
 ADD Collector.py /Collector
 ADD Cascade.py /Collector
@@ -7,7 +7,7 @@ ADD Processor.py /Collector
 ADD Tweet.py /Collector
 
 # install libraries
-RUN pip3 install kafka-python
-RUN pip3 install termcolor
+RUN pip3 install --no-cache-dir kafka-python
+RUN pip3 install --no-cache-dir termcolor
 
 CMD python3 Collector.py --broker-list localhost:9092
