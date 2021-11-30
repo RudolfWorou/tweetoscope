@@ -35,7 +35,7 @@ def main():
     )
     hottest_cascades = []
     
-    print(f"Here are the {args.K}-hottest tweets")
+    logger.info(f"Here are the {args.K}-hottest tweets")
     
     for msg in consumer:                            # Blocking call waiting for a new message  
         

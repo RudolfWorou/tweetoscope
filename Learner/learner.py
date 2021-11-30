@@ -37,7 +37,7 @@ def main():
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
     key_deserializer= lambda v: v.decode(),                       # How to deserialize the key (if any) 
-    group_id="PropertiesConsumerGroup-{}".format(args.obs_wind)
+    group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
     )
 
     ## Producer of cascade_properties

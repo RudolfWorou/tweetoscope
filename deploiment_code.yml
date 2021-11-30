@@ -18,6 +18,7 @@ spec:
         - name: generator-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/ubuntu_with_generator
           imagePullPolicy: Always
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,6 +40,7 @@ spec:
         - name: collector-container
           image: gitlab-student.centralesupelec.fr:4567/tweetos-buddies/tweetoscope/python_with_collector
           imagePullPolicy: Always
+
 ---
 apiVersion: apps/v1
 kind: Deployment
