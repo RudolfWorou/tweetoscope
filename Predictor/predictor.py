@@ -48,7 +48,7 @@ def main():
     group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
     )
 
-    #consumer_1.assign([TopicPartition(input_topic_1, key_dic[args.observation_window])])
+    consumer_1.assign([TopicPartition(input_topic_1, key_dic[args.observation_window])])
 
 
     consumer_2 = KafkaConsumer(input_topic_2,                   # Topic name
