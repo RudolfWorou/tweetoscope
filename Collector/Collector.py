@@ -58,7 +58,7 @@ def main():
       key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any)
     )
 
-    #Creation d'une carte de processeurs
+    #Creation d'une carte de processeurs#
     cartes_processeurs = {}
 
     for msg in consumer:                              
