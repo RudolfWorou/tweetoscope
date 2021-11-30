@@ -27,7 +27,7 @@ def main():
     output_topic_3 = "stats"
 
     #topics'key
-    key_dic ={"300":0, "600":1, "1200":2}
+    #key_dic ={"300":0, "600":1, "1200":2}
 
 
     ## Parser setting up
