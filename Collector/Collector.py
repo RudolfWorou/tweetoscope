@@ -92,33 +92,19 @@ def main():
               logger.critical(f"The cascade with id {Key} already has been closed.")
               continue 
 
+        #On vérifie si il y a moyen d'envoyer des cascades partielles
+        for i in T_obs :  
+          cascades_series = cartes_processeurs[source].get_cascades_series(t,i, min_cascade_size)
+          if len(cascades_series) != 0:
+            for c in cascades_series :      
+              Cle = list(c.keys())[0]
+              Valeur = c[Cle]
+              producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
+              logger.info("-------------------------------------------------------------")
+              logger.info("-------------------------------------------------------------")
+              logger.info("A new cascade has been send to topic cascade_series")
         
-        for i in T_obs :
-          
-          V = cartes_processeurs[source]
-          cascades = V.get_collection
-
-          le_temps_le_plus_ancien=[]
-          for K, cascade in cascades.items():
-            le_temps_le_plus_ancien.append(cascade.tweets[0][0])
-          
-          if len(le_temps_le_plus_ancien)!=0 :
-            dt = t - min(le_temps_le_plus_ancien)    
-          else: 
-            dt = t
-
-          if dt >= i and dt < 2*i:
-            cascades_series = cartes_processeurs[source].get_cascades_series(t,i, min_cascade_size)
-            if len(cascades_series) != 0:
-              for c in cascades_series :      
-                  Cle = list(c.keys())[0]
-                  Valeur = c[Cle]
-                  producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("A new cascade has been send to topic cascade_series")
-                  #
-
+        #On vérifie si il y a moyen d'envoyer des cascades finies
         cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
         if len(cascades_properties) != 0:
           for c in cascades_properties :
