@@ -1,10 +1,19 @@
-stages:
-    - build
-    #- test
-    #- quality
-    #- package
 
-services: 
+#################################################################################################################
+#                                               LES STAGES                                                      #
+#################################################################################################################
+
+stages:
+    - quality
+    #- test
+    - build
+    #- deploy
+    #- performance
+
+#################################################################################################################
+#                                                  BUILD                                                        #
+#################################################################################################################
+services : 
     - docker:dind
 kafka_build :
     stage: build
@@ -13,57 +22,52 @@ kafka_build :
         - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka 
-<<<<<<< HEAD
-       
-=======
-    retry : 2   
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
     only:
+        changes:
+            - Kafka/**/*
         refs:
-            - master
-        #changes:
-        #    - Kafka/**/*
+            - minicube
+    #only:
+    #    refs :
+    #        - master
+
 services: 
     - docker:dind
 Generator_build :
     stage: build
+    when: on_success
     image: docker:latest
     script:
         - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-<<<<<<< HEAD
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-=======
-        #- docker run --rm --network="host" -it $CI_REGISTRY_IMAGE/ubuntu_with_generator
-        #- docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-    retry : 2
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
     only:
+        changes:
+            - Generator/**/*
         refs:
-            - master
-    when: on_success # s'exécutera uniquement si le job kafka_build
+            - minicube
+    #only:
+    #    refs :
+    #        - master
 
 services: 
     - docker:dind
 logger_build :
     stage: build
     image: docker:latest
-<<<<<<< HEAD
-    allow_failure:true
-=======
     allow_failure : true
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     script:
         - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
         - docker push $CI_REGISTRY_IMAGE/python_with_logger
     only:
-        refs :
-            - master
-        
+        changes :
+            - Logger/**/*
+        refs:
+            - minicube
 services: 
     - docker:dind
 collector_build :
@@ -73,13 +77,15 @@ collector_build :
         - cd Collector
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
-    #   - docker push $CI_REGISTRY_IMAGE/python_with_collector
+        - docker push $CI_REGISTRY_IMAGE/python_with_collector
     only:
-        refs :
-            - master
+        changes :
+            - Collector/**/*
+        refs:
+            - minicube
     when: on_success 
 
-    services: 
+services: 
     - docker:dind
 estimator_build :
     stage: build
@@ -88,20 +94,34 @@ estimator_build :
         - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
-        #- docker push $CI_REGISTRY_IMAGE/python_with_estimator
-
+        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
     only:
-        refs :
-            - master
+        changes :
+            - Estimator/**/*
+        refs:
+            - minicube
     when : on_success
 
 services: 
     - docker:dind
-<<<<<<< HEAD
-learner_image_job :
-=======
+predictor_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Predictor
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
+        - docker push $CI_REGISTRY_IMAGE/python_with_predictor
+    only:
+        changes:
+            - Predictor/**/*
+        refs:
+            - minicube
+    
+services: 
+    - docker:dind
 learner_build :
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     stage: build
     image: docker:latest
     allow_failure : true
@@ -109,20 +129,16 @@ learner_build :
         - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
-        #- docker push $CI_REGISTRY_IMAGE/python_with_learner
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner
     only:
-        refs :
-            - master
-        #changes:
-        #    - Learner/**/*
+        changes:
+            - Learner/**/*
+        refs:
+            - minicube
             
 services: 
     - docker:dind
-<<<<<<< HEAD
 monitor_image_job :
-=======
-monitor_build :
->>>>>>> f9f376b1b5cccf4448c31ddaf8c4d9b4514126f1
     stage: build
     image: docker:latest
     allow_failure : true
@@ -130,9 +146,59 @@ monitor_build :
         - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
-        #- docker push $CI_REGISTRY_IMAGE/python_with_monitor
+        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
     only:
-        refs : 
-            - master
-        #changes:
-        #    - Monitor/**/*
+        changes:
+            - Monitor/**/*
+        refs:
+            - minicube
+
+services: 
+    - docker:dind
+dashboard_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dashboard
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
+        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
+    only:
+        changes:
+            - Dashboard/**/*
+        refs:
+            - minicube
+
+
+
+#################################################################################################################
+#                                                  TEST                                                         #
+#################################################################################################################
+
+
+
+#################################################################################################################
+#                                                  QUALITY                                                      #
+#################################################################################################################
+code_quality_job:
+  stage: quality
+  image: docker:stable
+  allow_failure: true
+  services:
+    - docker:stable-dind
+  script:
+    - mkdir codequality-results
+    - docker run
+        --env CODECLIMATE_CODE="$PWD"
+        --volume "$PWD":/code
+        --volume /var/run/docker.sock:/var/run/docker.sock
+        --volume /tmp/cc:/tmp/cc
+        codeclimate/codeclimate analyze -f html > ./codequality-results/index.html
+  artifacts:
+    paths:
+      - codequality-results/
+    only:
+        refs:
+            - minicube
+
