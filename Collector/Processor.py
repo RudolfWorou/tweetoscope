@@ -22,12 +22,12 @@ class Processor :
                 self.collection[key].tweets.append((tweet.time, tweet.magnitude))
     
     #Méthode servant à récupérer toutes les cascades après un temps d'observation donné
-    def get_cascades_series(self,tActuel, T_obs, min_cascade_size):
+    def get_cascades_series(self, T_obs, min_cascade_size):
         resultat = []
         
         for C, V in self.collection.items() :
-            Dt = tActuel - V.tweets[0][0]
-            if min_cascade_size <= len(V.tweets) and Dt >= T_obs  :
+            Dt = V.tweets[len(V.tweets)-1][0] - V.tweets[0][0]
+            if min_cascade_size <= len(V.tweets) and Dt >= T_obs :
                 Key = None
                 Value = {}
                 Value['type'] = 'serie'
@@ -70,3 +70,4 @@ class Processor :
     @property
     def get_collection(self):
         return self.collection
+    
