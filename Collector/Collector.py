@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-
 import argparse                   # To parse command line arguments
-import json                       # To parse and dump JSON
+import json
 from kafka import KafkaConsumer   # Import Kafka consumer
 from kafka import KafkaProducer
 
@@ -62,11 +61,11 @@ def main():
     #Creation d'une carte de processeurs
     cartes_processeurs = {}
 
-    for msg in consumer:                            # Blocking call waiting for a new message  
+    for msg in consumer:                              
         #On récupère les infos contenus dans un tweet/retweet
         Key = msg.value['tweet_id']
         type_ = msg.value['type']
-        source = msg.value['tweet_id']
+        source = msg.key
         msge = msg.value['msg']
         t = msg.value['t']
         m = msg.value['m']
@@ -81,38 +80,41 @@ def main():
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)
         
-        elif source_exist : #tweet or retweet
+        elif type_=="tweet" and source_exist:      
+          tweet = Tweet(type_, msge, t, m, source, info)
+          (cartes_processeurs[source]).add_tweet(Key, tweet)
+
+        elif type_ =="retweet" and source_exist : #tweet or retweet
           tweet = Tweet(type_, msge, t, m, source, info)
           (cartes_processeurs[source]).add_tweet(Key, tweet)  
 
         elif type_ == "retweet" and not source_exist:
-              logger.critical(f"The cascade with id {Key} already has been closed.") 
+              logger.critical(f"The cascade with id {Key} already has been closed.")
+              continue 
 
-        #On parcours notre carte de processeurs pour voir s'il y a de nouvelles cascades à envoyer
-        for K, V in cartes_processeurs.items():
-            for i in T_obs :    
-              cascades_series = V.get_cascades_series(i, min_cascade_size)
-              if len(cascades_series) != 0:
-                for c in cascades_series :      
-                    Cle = list(c.keys())[0]
-                    Valeur = c[Cle]
-                    producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
-                    
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("-------------------------------------------------------------")
-                    logger.info("A new cascade has been send to topic cascade_series")
-
-
-            cascades_properties = V.get_cascade_properties(t,T_obs, terminated, min_cascade_size)
-            if len(cascades_properties) != 0:
-              for c in cascades_properties :
-                  Cle = list(c.keys())[0]
-                  Valeur = c[Cle]
-                  producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
+        #On vérifie si il y a moyen d'envoyer des cascades partielles
+        for i in T_obs :  
+          cascades_series = cartes_processeurs[source].get_cascades_series(t,i, min_cascade_size)
+          if len(cascades_series) != 0:
+            for c in cascades_series :      
+              Cle = list(c.keys())[0]
+              Valeur = c[Cle]
+              producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
+              logger.info("-------------------------------------------------------------")
+              logger.info("-------------------------------------------------------------")
+              logger.info("A new cascade has been send to topic cascade_series")
+        
+        #On vérifie si il y a moyen d'envoyer des cascades finies
+        cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)
+        if len(cascades_properties) != 0:
+          for c in cascades_properties :
+            Cle = list(c.keys())[0]
+            Valeur = c[Cle]
+            producer.send(out_properties, key = str(Cle), value = Valeur ) # Send a new message to topic
                   
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("-------------------------------------------------------------")
-                  logger.info("A new cascade has been send to topic cascade_properties")
+            logger.info("-------------------------------------------------------------")
+            logger.info("-------------------------------------------------------------")
+            logger.info("A new cascade has been send to topic cascade_properties")
 
 
     producer.flush() # Flush: force purging intermediate buffers before leaving
