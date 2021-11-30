@@ -25,11 +25,7 @@ kafka_build :
     only:
         changes:
             - Kafka/**/*
-        #refs:
-         #   - minicube
-    #only:
-    #    refs :
-    #        - master
+        
 
 services: 
     - docker:dind
@@ -45,11 +41,7 @@ Generator_build :
     only:
         changes:
             - Generator/**/*
-        refs:
-            - minicube
-    #only:
-    #    refs :
-    #        - master
+        
 
 services: 
     - docker:dind
@@ -65,8 +57,7 @@ logger_build :
     only:
         changes :
             - Logger/**/*
-        refs:
-            - minicube
+        
 services: 
     - docker:dind
 collector_build :
@@ -80,8 +71,7 @@ collector_build :
     only:
         changes :
             - Collector/**/*
-        refs:
-            - minicube
+        
     when: on_success 
 
 services: 
@@ -97,8 +87,7 @@ estimator_build :
     only:
         changes :
             - Estimator/**/*
-        refs:
-            - minicube
+        
     when : on_success
 
 services: 
@@ -115,8 +104,7 @@ predictor_build :
     only:
         changes:
             - Predictor/**/*
-        refs:
-            - minicube
+        
     
 services: 
     - docker:dind
@@ -132,8 +120,7 @@ learner_build :
     only:
         changes:
             - Learner/**/*
-        refs:
-            - minicube
+        
             
 services: 
     - docker:dind
@@ -149,8 +136,7 @@ monitor_image_job :
     only:
         changes:
             - Monitor/**/*
-        refs:
-            - minicube
+        
 
 services: 
     - docker:dind
@@ -166,8 +152,7 @@ dashboard_build :
     only:
         changes:
             - Dashboard/**/*
-        refs:
-            - minicube
+        
 
 
 
