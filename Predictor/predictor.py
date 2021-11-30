@@ -44,18 +44,18 @@ def main():
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
-    key_deserializer= lambda v: v.decode(),                        # How to deserialize the key (if any)
-    group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
+    key_deserializer= lambda v: v.decode()                        # How to deserialize the key (if any)
+    #group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
     )
 
-    consumer_1.assign([TopicPartition(input_topic_1, key_dic[args.observation_window])])
+    #consumer_1.assign([TopicPartition(input_topic_1, key_dic[args.observation_window])])
 
 
     consumer_2 = KafkaConsumer(input_topic_2,                   # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: pickle.loads(v),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
-    group_id = "ModelsConsumerGroup-{}".format(args.observation_window),   
+    #group_id = "ModelsConsumerGroup-{}".format(args.observation_window),   
     consumer_timeout_ms=10000
     )
                                 

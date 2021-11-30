@@ -27,7 +27,6 @@ def main():
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
-    parser.add_argument('--observation-window', type=str, required=True, help="Observation window which can take the values : 300/600/1200")
     args = parser.parse_args()  # Parse arguments
     
     ## Consumer of cascade_series
@@ -36,8 +35,7 @@ def main():
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
-    key_deserializer= lambda v: v.decode(),                       # How to deserialize the key (if any) 
-    group_id="PropertiesConsumerGroup-{}".format(args.observation_window)
+    key_deserializer= lambda v: v.decode()                       # How to deserialize the key (if any) 
     )
 
     ## Producer of cascade_properties
