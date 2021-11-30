@@ -40,7 +40,7 @@ def main():
     
     ## Consumer of cascade_series
     
-    consumer_1 = KafkaConsumer(
+    consumer_1 = KafkaConsumer(input_topic_1,
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
