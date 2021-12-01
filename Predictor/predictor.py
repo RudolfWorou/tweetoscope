@@ -120,12 +120,17 @@ def main():
             else:
                 logger.debug("Message of type parameters isn't received yet. T_obs is : " + str(T_obs) + " And cid is :" +str (cid))
                 continue
-        X=[p,n_star,G1]
+        
 
         if G1==0:
-            logger.critical('G1 is equals to zero')   
-            break
-        w = (n_tot - n_obs)*(1-n_star)/G1
+            #logger.critical('G1 is equals to zero')   
+            #break
+            G1=0.000001
+            w = (n_tot - n_obs)*(1-n_star)/G1
+            X=[p,n_star,G1]
+        else:
+            w = (n_tot - n_obs)*(1-n_star)/G1
+            X=[p,n_star,G1]
 
         samples = {                                              
         'type': 'sample',
