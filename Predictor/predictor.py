@@ -125,9 +125,10 @@ def main():
         if G1==0:
             #logger.critical('G1 is equals to zero')   
             #break
-            G1=0.000001
-            w = (n_tot - n_obs)*(1-n_star)/G1
-            X=[p,n_star,G1]
+            #G1=0.000001
+            #w = (n_tot - n_obs)*(1-n_star)/G1
+            #X=[p,n_star,G1]
+            continue
         else:
             w = (n_tot - n_obs)*(1-n_star)/G1
             X=[p,n_star,G1]
