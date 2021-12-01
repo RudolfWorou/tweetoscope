@@ -27,7 +27,7 @@ class Processor :
         
         for C, V in self.collection.items() :
             Dt = tActuel - V.tweets[0][0]
-            if min_cascade_size <= len(V.tweets) and Dt >= T_obs  :
+            if min_cascade_size <= len(V.tweets) and Dt >= T_obs and Dt < 2*T_obs  :
                 Key = None
                 Value = {}
                 Value['type'] = 'serie'
