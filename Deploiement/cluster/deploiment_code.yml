@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: generator-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns #Cette variable est susceptible de changer suivant votre cas.
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: generator
@@ -24,9 +24,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: collector-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: collector
@@ -46,9 +46,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: estimator-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: estimator
@@ -67,9 +67,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: predictor-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: predictor
@@ -89,9 +89,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: learner-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: learner
@@ -110,9 +110,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dashboard-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: dashboard
@@ -131,9 +131,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: monitor-deployment
-  namespace: cpusdi1-60-ns
+  namespace: cpusdi1-36-ns
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: monitor

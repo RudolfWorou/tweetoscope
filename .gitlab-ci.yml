@@ -1,167 +1,17 @@
-
 #################################################################################################################
 #                                               LES STAGES                                                      #
 #################################################################################################################
 
 stages:
-    - quality
     #- test
+    - quality
     - build
     #- deploy
-    #- performance
-
-#################################################################################################################
-#                                                  BUILD                                                        #
-#################################################################################################################
-services : 
-    - docker:dind
-kafka_build :
-    stage: build
-    image: docker:latest
-    script:
-        - cd Kafka
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
-    only:
-        changes:
-            - Kafka/**/*
-    #only:
-    #    refs :
-    #        - master
-
-services: 
-    - docker:dind
-Generator_build :
-    stage: build
-    when: on_success
-    image: docker:latest
-    script:
-        - cd Generator
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
-        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
-    only:
-        changes:
-            - Generator/**/*
-    #only:
-    #    refs :
-    #        - master
-
-services: 
-    - docker:dind
-logger_build :
-    stage: build
-    image: docker:latest
-    allow_failure : true
-    script:
-        - cd Logger
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
-        - docker push $CI_REGISTRY_IMAGE/python_with_logger
-    only:
-        changes :
-            - Logger/**/*
-services: 
-    - docker:dind
-collector_build :
-    stage: build
-    image: docker:latest
-    script:
-        - cd Collector
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
-        - docker push $CI_REGISTRY_IMAGE/python_with_collector
-    only:
-        changes :
-            - Collector/**/*
-    when: on_success 
-
-services: 
-    - docker:dind
-estimator_build :
-    stage: build
-    image: docker:latest
-    script:
-        - cd Estimator
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
-        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
-    only:
-        changes :
-            - Estimator/**/*
-    when : on_success
-
-services: 
-    - docker:dind
-predictor_build :
-    stage: build
-    image: docker:latest
-    allow_failure : true
-    script:
-        - cd Predictor
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
-        - docker push $CI_REGISTRY_IMAGE/python_with_predictor
-    only:
-        changes:
-            - Predictor/**/*
-    
-services: 
-    - docker:dind
-learner_build :
-    stage: build
-    image: docker:latest
-    allow_failure : true
-    script:
-        - cd Learner
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
-        - docker push $CI_REGISTRY_IMAGE/python_with_learner
-    only:
-        changes:
-            - Learner/**/*
-            
-services: 
-    - docker:dind
-monitor_image_job :
-    stage: build
-    image: docker:latest
-    allow_failure : true
-    script:
-        - cd Monitor
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
-        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
-    only:
-        changes:
-            - Monitor/**/*
-
-services: 
-    - docker:dind
-dashboard_build :
-    stage: build
-    image: docker:latest
-    allow_failure : true
-    script:
-        - cd Dashboard
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
-        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
-    only:
-        refs:
-            - master
-
-
-#################################################################################################################
-#                                                  TEST                                                         #
-#################################################################################################################
-
-
 
 #################################################################################################################
 #                                                  QUALITY                                                      #
 #################################################################################################################
+
 code_quality_job:
   stage: quality
   image: docker:stable
@@ -179,4 +29,142 @@ code_quality_job:
   artifacts:
     paths:
       - codequality-results/
+
+#################################################################################################################
+#                                                  BUILD                                                        #
+#################################################################################################################
+
+services : 
+    - docker:dind
+kafka_build :
+    stage: build
+    image: docker:latest
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
+    only:
+        changes:
+            - Kafka/**/*
+
+services: 
+    - docker:dind
+Generator_build :
+    stage: build
+    when: on_success
+    image: docker:latest
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
+        - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
+    only:
+        changes:
+            - Generator/**/*
+    
+services: 
+    - docker:dind
+logger_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
+        - docker push $CI_REGISTRY_IMAGE/python_with_logger
+    only:
+        changes :
+            - Logger/**/*
+
+services: 
+    - docker:dind
+collector_build :
+    stage: build
+    image: docker:latest
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
+        - docker push $CI_REGISTRY_IMAGE/python_with_collector
+    only:
+        changes :
+            - Collector/**/*
+    when: on_success 
+
+services: 
+    - docker:dind
+estimator_build :
+    stage: build
+    image: docker:latest
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
+        - docker push $CI_REGISTRY_IMAGE/python_with_estimator
+    only:
+        changes :
+            - Estimator/**/*
+    when : on_success
+
+services: 
+    - docker:dind
+predictor_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
+        - docker push $CI_REGISTRY_IMAGE/python_with_predictor
+    only:
+        changes:
+            - Predictor/**/*
+    
+services: 
+    - docker:dind
+learner_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
+        - docker push $CI_REGISTRY_IMAGE/python_with_learner
+    only:
+        changes:
+            - Learner/**/*
+            
+services: 
+    - docker:dind
+monitor_image_job :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
+        - docker push $CI_REGISTRY_IMAGE/python_with_monitor
+    only:
+        changes:
+            - Monitor/**/*
+
+services: 
+    - docker:dind
+dashboard_build :
+    stage: build
+    image: docker:latest
+    allow_failure : true
+    script:
+        - cd Dockerfiles
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
+        - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
+    only:
+        changes:
+            - Dashboard/**/*
 

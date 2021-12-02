@@ -1,37 +1,23 @@
 ## Internal libraries
 import argparse, json
 from kafka import KafkaProducer, KafkaConsumer,TopicPartition
-import numpy as np
-##External libraries
 import logger as Logger
 import pickle
-
-## functions
-
-## main
-
 
 def main():
 
     ## Logger creation 
-
     logger = Logger.get_logger('Predictor', broker_list='kafka-service:9092', debug=True)  # the source string (here 'my-node') helps to identify
                                                                                  # in the logger terminal the source that emitted a log message.
     
     ## Topics
-
     input_topic_1 = "cascade_properties"
     input_topic_2="models"
     output_topic_1="samples"
     output_topic_2 = "alerts"
     output_topic_3 = "stats"
 
-    #topics'key
-    #key_dic ={"300":0, "600":1, "1200":2}
-
-
     ## Parser setting up
-
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
     parser.add_argument('--observation-window', type=str, required=True, help="Observation window which can take the values : 300/600/1200")
@@ -39,7 +25,6 @@ def main():
    
     
     ## Consumer of cascade_series
-    
     consumer_1 = KafkaConsumer(input_topic_1,
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
@@ -125,9 +110,9 @@ def main():
         if G1==0:
             #logger.critical('G1 is equals to zero')   
             #break
-            #G1=0.000001
-            #w = (n_tot - n_obs)*(1-n_star)/G1
-            #X=[p,n_star,G1]
+            G1=0.000001
+            w = (n_tot - n_obs)*(1-n_star)/G1
+            X=[p,n_star,G1]
             continue
         else:
             w = (n_tot - n_obs)*(1-n_star)/G1
@@ -146,7 +131,8 @@ def main():
         for msg_2 in consumer_2:
             model = msg_2.value
         
-        w_pred = model.predict([X])[0]
+        #w_pred = model.predict([X])[0] On ignore ce qui vient du random forest
+        w_pred = w
         n_pred = n_obs+w_pred*(G1/(1-n_star))
 
         ARE = abs(n_pred - n_tot) / n_tot

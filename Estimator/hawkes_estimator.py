@@ -6,32 +6,23 @@ import numpy as np
 import logger as Logger
 from labwork_functions import compute_MAP, prediction
 
-## functions
-
-## main
-
-
 def main():
 
     ## Logger creation 
-
     logger = Logger.get_logger('Hawkes Estimator', broker_list='kafka-service:9092', debug=True)  # the source string (here 'my-node') helps to identify
                                                                                  # in the logger terminal the source that emitted a log message.
     
     ## Topics
-
     input_topic="cascade_series"
     output_topic="cascade_properties"
 
     ## Parser setting up
-
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--broker-list', type=str, required=True, help="the broker list")
     args = parser.parse_args()  # Parse arguments
     
     ## Consumer of cascade_series
-    
-    consumer = KafkaConsumer(input_topic,                   # Topic name
+    consumer = KafkaConsumer(input_topic,                        # Topic name
     bootstrap_servers = args.broker_list,                        # List of brokers passed from the command line
     value_deserializer=lambda v: json.loads(v.decode('utf-8')),  # How to deserialize the value from a binary buffer
     auto_offset_reset="earliest",
@@ -39,7 +30,6 @@ def main():
     )
 
     ## Producer of cascade_properties
-
     producer = KafkaProducer(
     bootstrap_servers = args.broker_list,                     # List of brokers passed from the command line
     value_serializer=lambda v: json.dumps(v).encode('utf-8'), # How to serialize the value to a binary buffer
