@@ -40,7 +40,7 @@ kafka_build :
     stage: build
     image: docker:latest
     script:
-        - cd Dockerfiles
+        - cd Kafka
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_start_kafka -t $CI_REGISTRY_IMAGE/ubuntu_with_kafka  .
         - docker push $CI_REGISTRY_IMAGE/ubuntu_with_kafka   
@@ -55,7 +55,7 @@ Generator_build :
     when: on_success
     image: docker:latest
     script:
-        - cd Dockerfiles
+        - cd Generator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_generator -t $CI_REGISTRY_IMAGE/ubuntu_with_generator  .
         - docker push $CI_REGISTRY_IMAGE/ubuntu_with_generator
@@ -70,7 +70,7 @@ logger_build :
     image: docker:latest
     allow_failure : true
     script:
-        - cd Dockerfiles
+        - cd Logger
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_logger -t $CI_REGISTRY_IMAGE/python_with_logger .
         - docker push $CI_REGISTRY_IMAGE/python_with_logger
@@ -84,7 +84,7 @@ collector_build :
     stage: build
     image: docker:latest
     script:
-        - cd Dockerfiles
+        - cd Collector
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_collector -t $CI_REGISTRY_IMAGE/python_with_collector .
         - docker push $CI_REGISTRY_IMAGE/python_with_collector
@@ -99,7 +99,7 @@ estimator_build :
     stage: build
     image: docker:latest
     script:
-        - cd Dockerfiles
+        - cd Estimator
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_estimator -t $CI_REGISTRY_IMAGE/python_with_estimator .
         - docker push $CI_REGISTRY_IMAGE/python_with_estimator
@@ -115,7 +115,7 @@ predictor_build :
     image: docker:latest
     allow_failure : true
     script:
-        - cd Dockerfiles
+        - cd Predictor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_predictor -t $CI_REGISTRY_IMAGE/python_with_predictor .
         - docker push $CI_REGISTRY_IMAGE/python_with_predictor
@@ -130,7 +130,7 @@ learner_build :
     image: docker:latest
     allow_failure : true
     script:
-        - cd Dockerfiles
+        - cd Learner
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_learner -t $CI_REGISTRY_IMAGE/python_with_learner .
         - docker push $CI_REGISTRY_IMAGE/python_with_learner
@@ -145,7 +145,7 @@ monitor_image_job :
     image: docker:latest
     allow_failure : true
     script:
-        - cd Dockerfiles
+        - cd Monitor
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_monitor -t $CI_REGISTRY_IMAGE/python_with_monitor .
         - docker push $CI_REGISTRY_IMAGE/python_with_monitor
@@ -160,7 +160,7 @@ dashboard_build :
     image: docker:latest
     allow_failure : true
     script:
-        - cd Dockerfiles
+        - cd Dashboard
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
         - docker build -f Dockerfile_dashboard -t $CI_REGISTRY_IMAGE/python_with_dashboard .
         - docker push $CI_REGISTRY_IMAGE/python_with_dashboard
