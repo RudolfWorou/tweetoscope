@@ -1,0 +1,9 @@
+FROM frolvlad/alpine-python-machinelearning
+WORKDIR /Logger
+ADD logger.py /Logger
+
+# install libraries
+RUN pip3 install --no-cache-dir kafka-python
+RUN pip3 install --no-cache-dir termcolor
+
+CMD python3 logger.py --broker-list kafka-service:9092

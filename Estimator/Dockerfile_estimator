@@ -1,0 +1,11 @@
+FROM frolvlad/alpine-python-machinelearning
+WORKDIR /Estimator
+ADD hawkes_estimator.py /Estimator
+ADD labwork_functions.py /Estimator
+ADD logger.py /Estimator
+
+# install libraries
+RUN pip3 install --no-cache-dir kafka-python
+RUN pip3 install --no-cache-dir termcolor
+
+CMD python3 hawkes_estimator.py --broker-list kafka-service:9092
