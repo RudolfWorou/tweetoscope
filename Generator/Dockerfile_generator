@@ -15,24 +15,24 @@ RUN apt-get install -y libssl-dev
 RUN apt install -y git
 RUN git clone https://github.com/HerveFrezza-Buet/gaml
 RUN cd gaml
-mkdir -p gaml/build
-cd gaml/build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DLIB_SUFFIX=64
-make -j
-make install
-cd ../../..
+RUN mkdir -p gaml/build
+RUN cd gaml/build
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DLIB_SUFFIX=64
+RUN make -j
+RUN make install
+RUN cd ../../..
 ENV PKG_CONFIG_PATH=/gaml/gaml/build
 
 # Install cppKafka
 RUN apt-get install -y librdkafka-dev
 RUN git clone https://github.com/mfontanini/cppkafka
 RUN cd cppkafka
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DLIB_SUFFIX=64
-make -j
-make install
-cd ../..
+RUN mkdir build
+RUN cd build
+RUN cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DLIB_SUFFIX=64
+RUN make -j
+RUN make install
+RUN cd ../..
 
 WORKDIR /generator
 ADD tweetoscopeGenerator.hpp /generator
