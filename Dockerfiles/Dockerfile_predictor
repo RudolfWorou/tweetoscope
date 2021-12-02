@@ -1,4 +1,6 @@
 FROM frolvlad/alpine-python-machinelearning
+cd ..
+cd Predictor
 WORKDIR /Predictor
 ADD predictor.py /Predictor
 ADD logger.py /Predictor

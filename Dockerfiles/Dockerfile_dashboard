@@ -1,4 +1,6 @@
 FROM python:3.8-alpine
+cd ..
+cd Dashboard
 WORKDIR /Dashboard
 ADD dashboard.py /Dashboard
 ADD logger.py /Dashboard

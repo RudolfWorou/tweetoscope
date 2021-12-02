@@ -1,4 +1,6 @@
 FROM frolvlad/alpine-python-machinelearning
+cd ..
+cd Estimator
 WORKDIR /Estimator
 ADD hawkes_estimator.py /Estimator
 ADD labwork_functions.py /Estimator

@@ -34,6 +34,8 @@ make -j
 make install
 cd ../..
 
+cd ..
+cd Generator
 WORKDIR /generator
 ADD tweetoscopeGenerator.hpp /generator
 ADD tweet-generator.cpp /generator

@@ -1,4 +1,6 @@
 FROM frolvlad/alpine-python-machinelearning
+cd ..
+cd Logger
 WORKDIR /Logger
 ADD logger.py /Logger
 

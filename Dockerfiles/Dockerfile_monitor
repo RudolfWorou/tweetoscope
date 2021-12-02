@@ -1,4 +1,6 @@
 FROM python:3.8-alpine
+cd ..
+cd Monitor
 WORKDIR /Monitor
 ADD monitor.py /Monitor
 ADD logger.py /Monitor
