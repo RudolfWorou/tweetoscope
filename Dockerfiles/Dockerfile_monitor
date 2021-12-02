@@ -1,5 +1,5 @@
 FROM python:3.8-alpine
-cd ..
+RUN cd ..
 cd Monitor
 WORKDIR /Monitor
 ADD monitor.py /Monitor

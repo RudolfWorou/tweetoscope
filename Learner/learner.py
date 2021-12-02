@@ -57,7 +57,7 @@ def main():
         logger.info("-------------------------------------------------------------")
         logger.info("Catch a new sample")
 
-        ### checking that we have a serie for the type
+        ### checking that we have a serie for the types
         if(msg.value['type']!='sample'):
             logger.critical("The element catched is not a sample")
             break

@@ -6,9 +6,9 @@ import scipy.optimize as optim
 def loglikelihood(params, history, t):
     """
     Returns the loglikelihood of a Hawkes process with exponential kernel
-    computed with a linear time complexity
+    computed with a linear time complexity 
         
-    params   -- parameter tuple (p,beta) of the Hawkes process
+    params   -- parameter tuple (p,beta) of the Hawkes processs
     history  -- (n,2) numpy array containing marked time points (t_i,m_i)  
     t        -- current time (i.e end of observation window)
     """

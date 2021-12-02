@@ -1,6 +1,6 @@
 FROM ubuntu
 
-cd ..
+RUN cd ..
 cd Kafka
 
 RUN apt-get update

@@ -1,5 +1,5 @@
 FROM frolvlad/alpine-python-machinelearning
-cd ..
+RUN cd ..
 cd Learner
 WORKDIR /Learner
 ADD learner.py /Learner

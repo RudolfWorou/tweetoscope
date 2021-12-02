@@ -159,7 +159,7 @@ class Logger:
         
         all_lines = []
         format_strings = []
-        max_lines_nb = 0
+        max_lines_nb = 0 #
         for i,col in enumerate(self.columns):
             width = col['length'] if col['length'] is not None else remaining_width
             lines = values[i].split("\n")

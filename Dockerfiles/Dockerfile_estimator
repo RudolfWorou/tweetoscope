@@ -1,5 +1,5 @@
 FROM frolvlad/alpine-python-machinelearning
-cd ..
+RUN cd ..
 cd Estimator
 WORKDIR /Estimator
 ADD hawkes_estimator.py /Estimator
