@@ -30,22 +30,20 @@ kubectl apply -f .\minikube_deploiement_code.yml
 The 10 hottests tweets can be seen in the dashboard logs.
 
 ## Launch the application on cluster
-
-Le déploiement du projet a été fait sur les clusters de l'école CentraleSupélec. <br>
-Nous avons utilisé Kubernetes pour le faire. <br>
-Le dossier Deploiement au niveau de la racine du projet contient les deux fichiers permettant de déployer le projet et vous n'aurez pas à le télécharger car il se trouve déjà sur le cluster de l'école. <br>
-Nous avons travaillé sur le cluster ayant pour identifiant cpusdi1_36 en utilisant l'application DCE qui peut être téléchargé sur le site : https://tutos.metz.centralesupelec.fr/TPs/Dcejs/index.html
+The project was deployed on the CentraleSupélec clusters with Kubernetes. <br>
+The Deployment folder at the root of the project contains the two files to deploy the project and one won't have to download it because it is already on the school's cluster. <br>
+We worked on the cluster with the ID cpusdi1_36 using the DCEJS application, which can be downloaded from the site: https://tutos.metz.centralesupelec.fr/TPs/Dcejs/index.html
 <br>
-Après avoir suivi toutes les consignes, une fois sur le cluster de l'école (cpusdi1_36) faites :
+After following all the instructions, once on the school cluster (cpusdi1_36) do :
 
 ```
-cd coucou #Ce dossier contient les deux fichiers qui se trouvent dans le dossier Deploiement
+cd coucou # This folder contains the two files that are in the Deploiement folder
 ssh ic45
 kubectl -n cpusdi1-36-ns apply -f .\deploiement_zookeper_kafka.yml
 kubectl -n cpusdi1-36-ns apply -f .\deploiement_code.yml
 
-kubectl -n cpusdi1-36-ns get pods -o wide #Voir tous les pods qui viennent d'être créés.
-kubectl -n cpusdi1-36-ns -f logs NOM_DU_POD #Pour voir les logs du pod
+kubectl -n cpusdi1-36-ns get pods -o wide #See the created pods
+kubectl -n cpusdi1-36-ns -f logs POD_NAME #See pods' logs
 ```
 
 ## Students
