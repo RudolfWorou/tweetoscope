@@ -100,9 +100,9 @@ def main():
               Cle = list(c.keys())[0]
               Valeur = c[Cle]
               producer.send(out_series, key = str(Cle), value = Valeur) # Send a new message to topic
-              logger.info("-------------------------------------------------------------")
-              logger.info("-------------------------------------------------------------")
-              logger.info("A new cascade has been send to topic cascade_series")
+              #logger.info("-------------------------------------------------------------")
+              #logger.info("-------------------------------------------------------------")
+              #logger.info("A new cascade has been send to topic cascade_series")
         
         #On vérifie si il y a moyen d'envoyer des cascades finies
         cascades_properties = cartes_processeurs[source].get_cascade_properties(t,T_obs, terminated, min_cascade_size)

@@ -6,7 +6,8 @@ stages:
     #- test
     - quality
     - build
-    #- deploy
+    #- deploy #Pas possible de connecter le cluster de l'école avec gitlab mais voir rapport pour plus de 
+    # précisions
 
 #################################################################################################################
 #                                                  QUALITY                                                      #

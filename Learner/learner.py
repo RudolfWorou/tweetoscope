@@ -8,8 +8,8 @@ from sklearn.ensemble import RandomForestRegressor
 import pickle
 ## functions
 
-## main
 
+## main
 
 def main():
 
@@ -69,7 +69,7 @@ def main():
         logger.info(f"Fit the random forest model")
         n=len(X)
         if (n ==1) or (n< 100 and n %10==0) or (n%100==0):
-            model = RandomForestRegressor() ## random forest model
+            model = RandomForestRegressor(n_estimators=300) ## random forest model
             model.fit(X,y)
 
         logger.info(f"Ready to send a message to models topic")

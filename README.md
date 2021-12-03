@@ -30,6 +30,7 @@ kubectl apply -f .\minikube_deploiement_code.yml
 The 10 hottests tweets can be seen in the dashboard logs.
 
 ## Launch the application on cluster
+
 The project was deployed on the CentraleSupélec clusters with Kubernetes. <br>
 The Deployment folder at the root of the project contains the two files to deploy the project and one won't have to download it because it is already on the school's cluster. <br>
 We worked on the cluster with the ID cpusdi1_36 using the DCEJS application, which can be downloaded from the site: https://tutos.metz.centralesupelec.fr/TPs/Dcejs/index.html

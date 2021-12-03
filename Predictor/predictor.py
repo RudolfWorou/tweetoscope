@@ -4,6 +4,8 @@ from kafka import KafkaProducer, KafkaConsumer,TopicPartition
 import logger as Logger
 import pickle
 
+
+
 def main():
 
     ## Logger creation 
@@ -63,8 +65,6 @@ def main():
 
     ### Getting data from the input topic
     for msg in consumer_1:        # Blocking call waiting for a new message
-
-        
         
         T_obs = int(msg.key)
         
@@ -105,15 +105,11 @@ def main():
             else:
                 logger.debug("Message of type parameters isn't received yet. T_obs is : " + str(T_obs) + " And cid is :" +str (cid))
                 continue
-        
-
         if G1==0:
             #logger.critical('G1 is equals to zero')   
-            #break
             G1=0.000001
             w = (n_tot - n_obs)*(1-n_star)/G1
             X=[p,n_star,G1]
-            continue
         else:
             w = (n_tot - n_obs)*(1-n_star)/G1
             X=[p,n_star,G1]
@@ -131,8 +127,8 @@ def main():
         for msg_2 in consumer_2:
             model = msg_2.value
         
-        #w_pred = model.predict([X])[0] On ignore ce qui vient du random forest
-        w_pred = w
+        w_pred = model.predict([X])[0] #On ignore ce qui vient du random forest (si le résultat n'est pas correct)
+        #w_pred = w
         n_pred = n_obs+w_pred*(G1/(1-n_star))
 
         ARE = abs(n_pred - n_tot) / n_tot
