@@ -4,6 +4,7 @@ from kafka import KafkaProducer, KafkaConsumer,TopicPartition
 import logger as Logger
 import pickle
 
+
 def main():
 
     ## Logger creation 
