@@ -5,7 +5,7 @@ import numpy as np
 ##External libraries
 import logger as Logger
 from labwork_functions import compute_MAP, prediction
-
+#test
 def main():
 
     ## Logger creation 

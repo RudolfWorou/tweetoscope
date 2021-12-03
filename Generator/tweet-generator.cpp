@@ -5,7 +5,7 @@
   g++ -o tweet-generator tweet-generator.cpp -O3 $(pkg-config --cflags --libs gaml) -lpthread -lcppkafka
 
 */
-//here is a comment 
+
 #include <iostream>
 #include <iterator>
 #include <cppkafka/cppkafka.h>
