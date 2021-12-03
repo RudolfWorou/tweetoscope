@@ -8,6 +8,7 @@ import logger as Logger
 
 
 
+
 def main():
 
     # The topic on which to listen the tweets with the highest predicted popularitiess
