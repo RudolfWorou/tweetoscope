@@ -2,8 +2,9 @@
 
 This project is part of the software Application engineering class given in Mathematics and Data Science Major and supervised by Virginie Galtier. Tweetoscope is a tool used to predict the popularity of artificially generated tweets.
 
-# Démonstration en vidéo
-https://www.youtube.com/watch?v=2JOJzTY7ZIk 
+# Showcase video
+
+https://www.youtube.com/watch?v=2JOJzTY7ZIk
 
 ## Core architecture
 
