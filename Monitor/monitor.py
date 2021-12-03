@@ -5,7 +5,7 @@ import json                       # To parse and dump JSON
 from kafka import KafkaConsumer   # Import Kafka consumer
 
 import logger as Logger
-
+#here is a comment
 def main():
 
     # The topic on which to listen the tweets with the highest predicted popularitiess

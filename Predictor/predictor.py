@@ -3,7 +3,7 @@ import argparse, json
 from kafka import KafkaProducer, KafkaConsumer,TopicPartition
 import logger as Logger
 import pickle
-
+#comment test
 def main():
 
     ## Logger creation 
