@@ -7,6 +7,7 @@ from kafka import KafkaConsumer   # Import Kafka consumer
 import logger as Logger
 
 
+
 def main():
 
     # The topic on which to listen the tweets with the highest predicted popularitiess
