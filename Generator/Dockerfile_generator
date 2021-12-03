@@ -1,4 +1,4 @@
-FROM rudolfworou/ubuntu:latest
+FROM ubuntu
 
 RUN apt-get update
 RUN apt-get install -y wget
