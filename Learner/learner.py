@@ -10,7 +10,6 @@ import pickle
 
 ## main
 
-
 def main():
 
     ## Logger creation 

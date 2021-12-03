@@ -8,7 +8,6 @@ from Processor import Processor
 from Tweet import Tweet
 import logger as Logger
 
-
 def main():
 
     #[topic]
