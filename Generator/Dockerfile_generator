@@ -23,7 +23,7 @@ RUN make install
 RUN cd ../../..
 ENV PKG_CONFIG_PATH=/gaml/gaml/build
 
-# Install cppKafka
+# Install cppKafka,
 RUN apt-get install -y librdkafka-dev
 RUN git clone https://github.com/mfontanini/cppkafka
 RUN cd cppkafka
